@@ -4,13 +4,13 @@ import '../../../../core/theme/app_theme.dart';
 
 class GoldButton extends StatefulWidget {
   final String label;
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
   final bool outline;
   final IconData? icon;
   const GoldButton({
     super.key,
     required this.label,
-    required this.onTap,
+    this.onTap,
     this.outline = false,
     this.icon,
   });
@@ -27,7 +27,9 @@ class _GoldButtonState extends State<GoldButton> {
     return MouseRegion(
       onEnter: (_) => setState(() => _hovering = true),
       onExit: (_) => setState(() => _hovering = false),
-      cursor: SystemMouseCursors.click,
+      cursor: widget.onTap != null
+          ? SystemMouseCursors.click
+          : SystemMouseCursors.basic,
       child: GestureDetector(
         onTap: widget.onTap,
         child: AnimatedContainer(

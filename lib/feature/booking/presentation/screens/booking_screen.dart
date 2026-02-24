@@ -3,10 +3,12 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:intl/intl.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/widgets/section_label.dart';
 import '../../../../core/widgets/gold_button.dart';
 import '../../../home/presentation/widgets/footer_section.dart';
+
 
 class BookingScreen extends StatefulWidget {
   const BookingScreen({super.key});
@@ -47,7 +49,11 @@ class _BookingScreenState extends State<BookingScreen> {
     super.dispose();
   }
 
-  void _submitBooking() {
+  // ── رقم الواتساب ──────────────────────────────────────────────
+  static const _whatsappNumber = '201155699971'; // 20 = كود مصر
+
+  Future<void> _submitBooking() async {
+    // ── validation ─────────────────────────────────────────────
     if (_selectedDay == null) {
       _showSnack('من فضلك اختار تاريخ الفرح أولاً 📅', isError: true);
       return;
@@ -56,14 +62,55 @@ class _BookingScreenState extends State<BookingScreen> {
       _showSnack('من فضلك اختار الباكدج 📦', isError: true);
       return;
     }
-    if (_nameCtrl.text.isEmpty || _phoneCtrl.text.isEmpty) {
+    if (_nameCtrl.text.trim().isEmpty || _phoneCtrl.text.trim().isEmpty) {
       _showSnack('من فضلك أدخل اسمك ورقمك 📝', isError: true);
       return;
     }
-    _showSnack(
-      'تم الحجز! هنتواصل معاك على ${_phoneCtrl.text} لتأكيد العربون 🎉',
-      isError: false,
-    );
+
+    // ── اسم الباكدج ────────────────────────────────────────────
+    final packageLabel = {
+      'basic': 'Package 1 — Basic (1 ساعة) - 2500 LE',
+      'half':  'Package 2 — Half Day (6 ساعات) - 3500 LE',
+      'full':  'Package 3 — Full Day (12 ساعة) - 4000 LE',
+    }[_selectedPackage] ?? _selectedPackage;
+
+    // ── طريقة الدفع ────────────────────────────────────────────
+    final paymentLabel = {
+      'cash':     '💵 كاش',
+      'vodafone': '📱 فودافون كاش',
+      'card':     '💳 كريديت كارد',
+    }[_selectedPayment] ?? _selectedPayment;
+
+    // ── بناء الرسالة ────────────────────────────────────────────
+    final dateFormatted = DateFormat('EEEE, d MMMM yyyy').format(_selectedDay!);
+    final notes = _notesCtrl.text.trim();
+
+    final message = '''
+🌹 *طلب حجز جديد — iBrahiim Photography*
+
+👤 *الاسم:* ${_nameCtrl.text.trim()}
+📱 *التليفون:* ${_phoneCtrl.text.trim()}
+${_emailCtrl.text.trim().isNotEmpty ? '📧 *الإيميل:* ${_emailCtrl.text.trim()}\n' : ''}📅 *تاريخ الفرح:* $dateFormatted
+📦 *الباكدج:* $packageLabel
+💰 *طريقة العربون:* $paymentLabel
+💬 *ملاحظات:* ${notes.isEmpty ? '—' : notes}
+    '''.trim();
+
+    // ── فتح واتساب ──────────────────────────────────────────────
+    final encoded = Uri.encodeComponent(message);
+    final url = 'https://wa.me/$_whatsappNumber?text=$encoded';
+
+    try {
+      await launchUrl(
+        Uri.parse(url),
+        mode: LaunchMode.externalApplication,
+      );
+      _showSnack('تم فتح واتساب! ابعت الرسالة لتأكيد الحجز 🎉',
+          isError: false);
+    } catch (_) {
+      _showSnack('تعذّر فتح واتساب. حاول تفتحه يدوياً: 01155699971',
+          isError: true);
+    }
   }
 
   void _showSnack(String msg, {required bool isError}) {
