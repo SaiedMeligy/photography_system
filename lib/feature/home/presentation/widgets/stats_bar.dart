@@ -28,7 +28,10 @@ class StatsBar extends StatelessWidget {
           ? Wrap(
               alignment: WrapAlignment.center,
               runSpacing: 0,
-              children: stats.map((s) => _StatItem(s.$1, s.$2)).toList(),
+              children: stats.map((s) => SizedBox(
+                width: MediaQuery.of(context).size.width / 2,
+                child: _StatItem(s.$1, s.$2),
+              )).toList(),
             )
           : Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,

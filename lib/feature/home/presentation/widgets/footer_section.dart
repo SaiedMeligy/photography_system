@@ -155,11 +155,47 @@ class FooterSection extends StatelessWidget {
             fontWeight: FontWeight.w600,
           ),
         ),
+        const SizedBox(height: 6),
+        Text(
+          'PHOTOGRAPHY',
+          style: GoogleFonts.montserrat(
+            fontSize: 9,
+            letterSpacing: 0.35,
+            color: AppTheme.textDim,
+          ),
+        ),
+        const SizedBox(height: 24),
+        // Quick links row
+        Wrap(
+          alignment: WrapAlignment.center,
+          spacing: 24,
+          runSpacing: 8,
+          children: [
+            _FooterLink('Home', () => context.go('/')),
+            _FooterLink('Portfolio', () => context.go('/portfolio')),
+            _FooterLink('Packages', () => context.go('/packages')),
+            _FooterLink('Book a Date', () => context.go('/booking')),
+          ],
+        ),
+        const SizedBox(height: 24),
+        Text(
+          '📱 01155699971   •   📸 @HEEMA.GAMALPH',
+          textAlign: TextAlign.center,
+          style: GoogleFonts.montserrat(
+            fontSize: 11,
+            color: AppTheme.textDim,
+            height: 1.8,
+          ),
+        ),
         const SizedBox(height: 16),
         Text(
-          '© ${DateTime.now().year} iBrahiim Photography.\nAll rights reserved.',
+          '© ${DateTime.now().year} iBrahiim Photography. All rights reserved.',
           textAlign: TextAlign.center,
-          style: GoogleFonts.montserrat(fontSize: 11, color: AppTheme.textDim, height: 1.6),
+          style: GoogleFonts.montserrat(
+            fontSize: 10,
+            color: AppTheme.textDim,
+            height: 1.6,
+          ),
         ),
       ],
     );

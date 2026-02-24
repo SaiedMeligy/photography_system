@@ -94,11 +94,20 @@ class _PortfolioGrid extends StatelessWidget {
     final isMobile = MediaQuery.of(context).size.width < 700;
 
     if (isMobile) {
-      return Column(
-        children: images.map((img) => Padding(
-          padding: const EdgeInsets.only(bottom: 3),
-          child: _PortfolioItem(imagePath: img),
-        )).toList(),
+      return GridView.builder(
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          crossAxisSpacing: 3,
+          mainAxisSpacing: 3,
+          childAspectRatio: 0.8,
+        ),
+        itemCount: images.length,
+        itemBuilder: (ctx, i) => _PortfolioItem(
+          imagePath: images[i],
+          delay: i * 80,
+        ),
       );
     }
 
