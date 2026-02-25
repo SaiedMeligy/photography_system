@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:easy_localization/easy_localization.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/widgets/section_label.dart';
 import '../../../../core/widgets/gold_button.dart';
@@ -13,80 +14,90 @@ class PackagesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isMobile = MediaQuery.of(context).size.width < 900;
+    final isRtl = context.locale.languageCode == 'ar';
+
+    // Package data — strings come from translation keys
+    final packages = [
+      _Package(
+        tier: 'pkg_1_tier',
+        name: 'pkg_1_name',
+        duration: 'pkg_1_duration',
+        price: '2500',
+        features: [
+          'pkg_feat_session',
+          'pkg_feat_album',
+          'pkg_feat_tableau_30_40',
+          'pkg_feat_flash',
+        ],
+        featured: false,
+      ),
+      _Package(
+        tier: 'pkg_2_tier',
+        name: 'pkg_2_name',
+        duration: 'pkg_2_duration',
+        price: '3500',
+        features: [
+          'pkg_feat_session',
+          'pkg_feat_hall',
+          'pkg_feat_album',
+          'pkg_feat_tableau_40_50',
+          'pkg_feat_flash',
+        ],
+        featured: true,
+      ),
+      _Package(
+        tier: 'pkg_3_tier',
+        name: 'pkg_3_name',
+        duration: 'pkg_3_duration',
+        price: '4000',
+        features: [
+          'pkg_feat_prep',
+          'pkg_feat_hall',
+          'pkg_feat_album',
+          'pkg_feat_tableau_70_50',
+          'pkg_feat_flash',
+        ],
+        featured: false,
+      ),
+    ];
 
     return SingleChildScrollView(
       child: Column(
         children: [
-          // Hero
-          _PackagesHero(),
+          // ── Hero
+          const _PackagesHero(),
 
-          // Packages grid
+          // ── Packages grid
           Container(
             color: AppTheme.bg,
             padding: EdgeInsets.symmetric(
-              horizontal: isMobile ? 24 : 80,
+              horizontal: isMobile ? 20 : 80,
               vertical: 100,
             ),
             child: Column(
               children: [
-                const SectionLabel(text: 'Investment'),
-                const SizedBox(height: 20),
-                RichText(
-                  textAlign: TextAlign.center,
-                  text: TextSpan(
-                    children: [
-                      TextSpan(
-                        text: 'Choose Your\n',
-                        style: GoogleFonts.cormorantGaramond(
-                          fontSize: isMobile ? 36 : 52,
-                          fontWeight: FontWeight.w300,
-                          color: AppTheme.textPrimary,
-                          height: 1.2,
-                        ),
-                      ),
-                      TextSpan(
-                        text: 'Perfect Package',
-                        style: GoogleFonts.cormorantGaramond(
-                          fontSize: isMobile ? 36 : 52,
-                          fontWeight: FontWeight.w300,
-                          fontStyle: FontStyle.italic,
-                          color: AppTheme.gold,
-                          height: 1.2,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 16),
+                SectionLabel(text: 'section_packages'.tr()),
+                const SizedBox(height: 24),
                 Text(
-                  'كل باكدج مصمم عشان يغطي احتياجات مختلفة — اختار اللي يناسبك',
+                  'packages_subtitle'.tr(),
                   textAlign: TextAlign.center,
                   style: GoogleFonts.montserrat(
                     fontSize: 13,
                     color: AppTheme.textMuted,
                   ),
                 ),
-                const SizedBox(height: 70),
+                const SizedBox(height: 60),
 
-                // Package cards
+                // ── Cards
                 isMobile
                     ? Column(
                         children: [
-                          _PackageCard(
-                            package: _packages[0],
-                            delay: 0,
-                          ),
+                          _PackageCard(package: packages[0], delay: 0),
                           const SizedBox(height: 3),
                           _PackageCard(
-                            package: _packages[1],
-                            delay: 150,
-                            featured: true,
-                          ),
+                              package: packages[1], delay: 150, featured: true),
                           const SizedBox(height: 3),
-                          _PackageCard(
-                            package: _packages[2],
-                            delay: 300,
-                          ),
+                          _PackageCard(package: packages[2], delay: 300),
                         ],
                       )
                     : IntrinsicHeight(
@@ -94,32 +105,29 @@ class PackagesScreen extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
                             Expanded(
-                              child: _PackageCard(package: _packages[0], delay: 0),
+                              child:
+                                  _PackageCard(package: packages[0], delay: 0),
                             ),
                             const SizedBox(width: 3),
                             Expanded(
                               child: _PackageCard(
-                                  package: _packages[1],
+                                  package: packages[1],
                                   delay: 150,
                                   featured: true),
                             ),
                             const SizedBox(width: 3),
                             Expanded(
-                              child: _PackageCard(package: _packages[2], delay: 300),
+                              child: _PackageCard(
+                                  package: packages[2], delay: 300),
                             ),
                           ],
                         ),
                       ),
 
                 const SizedBox(height: 70),
-
-                // Extras
-                _ExtrasSection(),
-
+                const _ExtrasSection(),
                 const SizedBox(height: 40),
-
-                // Notes
-                _NotesSection(),
+                const _NotesSection(),
               ],
             ),
           ),
@@ -129,63 +137,21 @@ class PackagesScreen extends StatelessWidget {
       ),
     );
   }
-
-  // Package data from the price list image
-  static final List<_Package> _packages = [
-    _Package(
-      tier: 'Package 1',
-      name: 'Basic',
-      duration: '1 ساعة',
-      price: '2500',
-      features: [
-        'تصوير السيشن',
-        'اللبوم 30×45',
-        'تابلوه 30×40',
-        'فلاشة',
-      ],
-      featured: false,
-    ),
-    _Package(
-      tier: 'Package 2',
-      name: 'Half Day',
-      duration: '6 ساعات',
-      price: '3500',
-      features: [
-        'تصوير السيشن',
-        'تصوير القاعة',
-        'اللبوم 30×45',
-        'تابلوه 40×50',
-        'فلاشة',
-      ],
-      featured: true,
-    ),
-    _Package(
-      tier: 'Package 3',
-      name: 'Full Day',
-      duration: '12 ساعة',
-      price: '4000',
-      features: [
-        'تصوير السيشن + التجهيزات',
-        'تصوير القاعة',
-        'اللبوم 30×45',
-        'تابلوه 70×50',
-        'فلاشة',
-      ],
-      featured: false,
-    ),
-  ];
 }
 
-// ─── Package Hero ─────────────────────────────────────────────
+// ─── Hero ──────────────────────────────────────────────────────
 class _PackagesHero extends StatelessWidget {
+  const _PackagesHero();
+
   @override
   Widget build(BuildContext context) {
+    context.locale; // Listen for changes
     return Container(
       height: 340,
       color: AppTheme.surface,
       child: Stack(
         children: [
-          // decorative gold lines
+          // Decorative circles — position-agnostic (decorative only)
           Positioned(
             left: -40,
             top: -40,
@@ -194,7 +160,8 @@ class _PackagesHero extends StatelessWidget {
               height: 300,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                border: Border.all(color: AppTheme.gold.withOpacity(0.06), width: 80),
+                border: Border.all(
+                    color: AppTheme.gold.withOpacity(0.06), width: 80),
               ),
             ),
           ),
@@ -206,7 +173,8 @@ class _PackagesHero extends StatelessWidget {
               height: 400,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                border: Border.all(color: AppTheme.gold.withOpacity(0.04), width: 100),
+                border: Border.all(
+                    color: AppTheme.gold.withOpacity(0.04), width: 100),
               ),
             ),
           ),
@@ -215,10 +183,10 @@ class _PackagesHero extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const SizedBox(height: 90),
-                const SectionLabel(text: 'Pricing'),
+                SectionLabel(text: 'section_packages'.tr()),
                 const SizedBox(height: 20),
                 Text(
-                  'Packages & Pricing',
+                  'packages_title_1'.tr(),
                   style: GoogleFonts.cormorantGaramond(
                     fontSize: 62,
                     fontWeight: FontWeight.w300,
@@ -226,13 +194,14 @@ class _PackagesHero extends StatelessWidget {
                   ),
                 ).animate().fadeIn(duration: 800.ms).slideY(begin: 0.2, end: 0),
                 Text(
-                  'Price List — Wedding Photography',
-                  style: GoogleFonts.montserrat(
-                    fontSize: 11,
-                    letterSpacing: 0.25,
-                    color: AppTheme.textMuted,
+                  'packages_title_2'.tr(),
+                  style: GoogleFonts.cormorantGaramond(
+                    fontSize: 36,
+                    fontWeight: FontWeight.w300,
+                    fontStyle: FontStyle.italic,
+                    color: AppTheme.gold,
                   ),
-                ).animate().fadeIn(delay: 300.ms, duration: 600.ms),
+                ).animate().fadeIn(delay: 200.ms, duration: 700.ms),
               ],
             ),
           ),
@@ -242,7 +211,7 @@ class _PackagesHero extends StatelessWidget {
   }
 }
 
-// ─── Package Card ─────────────────────────────────────────────
+// ─── Package Card ──────────────────────────────────────────────
 class _PackageCard extends StatefulWidget {
   final _Package package;
   final int delay;
@@ -264,18 +233,22 @@ class _PackageCardState extends State<_PackageCard> {
   @override
   Widget build(BuildContext context) {
     final featured = widget.featured || widget.package.featured;
+    final isRtl = context.locale.languageCode == 'ar';
+
     return MouseRegion(
       onEnter: (_) => setState(() => _hover = true),
       onExit: (_) => setState(() => _hover = false),
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 400),
         curve: Curves.easeOut,
-        transform: Matrix4.translationValues(0, (_hover && !featured) ? -8 : 0, 0),
+        transform:
+            Matrix4.translationValues(0, (_hover && !featured) ? -8 : 0, 0),
         decoration: BoxDecoration(
           color: featured ? AppTheme.surface2 : AppTheme.surface,
           border: Border(
             top: BorderSide(
-              color: featured || _hover ? AppTheme.gold : Colors.transparent,
+              color:
+                  featured || _hover ? AppTheme.gold : Colors.transparent,
               width: 3,
             ),
             left: BorderSide(color: AppTheme.border),
@@ -295,28 +268,37 @@ class _PackageCardState extends State<_PackageCard> {
         clipBehavior: Clip.hardEdge,
         padding: const EdgeInsets.all(36),
         child: Column(
+          // stretch = content fills full width, aligns to reading direction
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Badge
-            if (featured)
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                color: AppTheme.gold,
-                child: Text(
-                  'MOST POPULAR',
-                  style: GoogleFonts.montserrat(
-                    fontSize: 9,
-                    fontWeight: FontWeight.w700,
-                    letterSpacing: 0.2,
-                    color: AppTheme.bg,
+            // ── Badge
+            if (featured) ...[
+              Align(
+                alignment: isRtl
+                    ? Alignment.centerRight
+                    : Alignment.centerLeft,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 12, vertical: 6),
+                  color: AppTheme.gold,
+                  child: Text(
+                    'package_most_popular'.tr().toUpperCase(),
+                    style: GoogleFonts.montserrat(
+                      fontSize: 9,
+                      fontWeight: FontWeight.w700,
+                      letterSpacing: 0.2,
+                      color: AppTheme.bg,
+                    ),
                   ),
                 ),
               ),
-            if (featured) const SizedBox(height: 20),
+              const SizedBox(height: 20),
+            ],
 
-            // Tier
+            // ── Tier label
             Text(
-              widget.package.tier.toUpperCase(),
+              widget.package.tier.tr().toUpperCase(),
+              textAlign: isRtl ? TextAlign.right : TextAlign.left,
               style: GoogleFonts.montserrat(
                 fontSize: 10,
                 fontWeight: FontWeight.w600,
@@ -326,9 +308,10 @@ class _PackageCardState extends State<_PackageCard> {
             ),
             const SizedBox(height: 8),
 
-            // Name
+            // ── Name
             Text(
-              widget.package.name,
+              widget.package.name.tr(),
+              textAlign: isRtl ? TextAlign.right : TextAlign.left,
               style: GoogleFonts.cormorantGaramond(
                 fontSize: 36,
                 fontWeight: FontWeight.w300,
@@ -337,10 +320,11 @@ class _PackageCardState extends State<_PackageCard> {
               ),
             ),
 
-            // Duration
+            // ── Duration row
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 8),
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Container(
                     width: 20,
@@ -349,7 +333,7 @@ class _PackageCardState extends State<_PackageCard> {
                   ),
                   const SizedBox(width: 8),
                   Text(
-                    widget.package.duration,
+                    widget.package.duration.tr(),
                     style: GoogleFonts.montserrat(
                       fontSize: 12,
                       color: AppTheme.textMuted,
@@ -360,11 +344,11 @@ class _PackageCardState extends State<_PackageCard> {
               ),
             ),
 
-            // Price
+            // ── Price
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 24),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment:CrossAxisAlignment.start,
                 children: [
                   RichText(
                     text: TextSpan(
@@ -390,7 +374,7 @@ class _PackageCardState extends State<_PackageCard> {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    'Egyptian Pounds',
+                    isRtl ? 'جنيه مصري' : 'LE',
                     style: GoogleFonts.montserrat(
                       fontSize: 10,
                       color: AppTheme.textDim,
@@ -401,11 +385,11 @@ class _PackageCardState extends State<_PackageCard> {
               ),
             ),
 
-            // Divider
+            // ── Divider
             Container(height: 1, color: AppTheme.border),
             const SizedBox(height: 28),
 
-            // Features
+            // ── Features list
             ...widget.package.features.map((f) => Padding(
                   padding: const EdgeInsets.only(bottom: 14),
                   child: Row(
@@ -429,7 +413,8 @@ class _PackageCardState extends State<_PackageCard> {
                       const SizedBox(width: 12),
                       Expanded(
                         child: Text(
-                          f,
+                          f.tr(),
+                          textAlign: isRtl ? TextAlign.right : TextAlign.left,
                           style: GoogleFonts.montserrat(
                             fontSize: 13,
                             color: AppTheme.textMuted,
@@ -441,13 +426,12 @@ class _PackageCardState extends State<_PackageCard> {
                   ),
                 )),
 
-            const Spacer(),
-            const SizedBox(height: 20),
+            const SizedBox(height: 40),
 
-            // CTA
+            // ── CTA
             Builder(
               builder: (ctx) => GoldButton(
-                label: 'Book This Package',
+                label: 'package_book_btn'.tr(),
                 onTap: () => ctx.go('/booking'),
                 outline: !featured,
                 icon: Icons.calendar_today_outlined,
@@ -466,21 +450,36 @@ class _PackageCardState extends State<_PackageCard> {
   }
 }
 
-// ─── Extras Section ───────────────────────────────────────────
+// ─── Extras Section ────────────────────────────────────────────
 class _ExtrasSection extends StatelessWidget {
-  final List<Map<String, String>> extras = const [
-    {'name': 'تصوير السيشن فقط', 'duration': 'ساعة', 'price': '1500'},
-    {'name': 'تصوير القاعة فقط', 'duration': 'ساعتين', 'price': '1000'},
-    {'name': 'تصوير برومو فيديو (سيشن + تجهيزات)', 'duration': '', 'price': '2000'},
-    {'name': 'تصوير برومو فيديو (سيشن + قاعة)', 'duration': 'Half Day', 'price': '2500'},
-    {'name': 'تصوير برومو فيديو (سيشن + تجهيزات + قاعة)', 'duration': 'Full Day', 'price': '3000'},
-    {'name': 'تصوير ريل (السيشن + التجهيزات)', 'duration': '', 'price': '1000'},
-    {'name': 'تصوير ريل', 'duration': 'Full Day', 'price': '1500'},
+  const _ExtrasSection();
+
+  static const List<Map<String, String>> _extras = [
+    {'name': 'extra_session_only', 'duration': 'extra_unit_hour', 'price': '1500'},
+    {'name': 'extra_hall_only', 'duration': 'extra_unit_hours', 'price': '1000'},
+    {
+      'name': 'extra_video_session_prep',
+      'duration': '',
+      'price': '2000'
+    },
+    {
+      'name': 'extra_video_session_hall',
+      'duration': 'extra_unit_half_day',
+      'price': '2500'
+    },
+    {
+      'name': 'extra_video_full_day',
+      'duration': 'extra_unit_full_day',
+      'price': '3000'
+    },
+    {'name': 'extra_reel_session_prep', 'duration': '', 'price': '1000'},
+    {'name': 'extra_reel_full_day', 'duration': 'extra_unit_full_day', 'price': '1500'},
   ];
 
   @override
   Widget build(BuildContext context) {
     final isMobile = MediaQuery.of(context).size.width < 700;
+    final isRtl = context.locale.languageCode == 'ar';
 
     return Container(
       decoration: BoxDecoration(
@@ -489,13 +488,14 @@ class _ExtrasSection extends StatelessWidget {
       ),
       padding: const EdgeInsets.all(48),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment:  CrossAxisAlignment.start,
         children: [
           RichText(
+            textAlign: isRtl ? TextAlign.right : TextAlign.left,
             text: TextSpan(
               children: [
                 TextSpan(
-                  text: 'Extra ',
+                  text: '${'extras_title_1'.tr()} ',
                   style: GoogleFonts.cormorantGaramond(
                     fontSize: 36,
                     fontWeight: FontWeight.w300,
@@ -503,7 +503,7 @@ class _ExtrasSection extends StatelessWidget {
                   ),
                 ),
                 TextSpan(
-                  text: 'Services',
+                  text: 'extras_title_2'.tr(),
                   style: GoogleFonts.cormorantGaramond(
                     fontSize: 36,
                     fontWeight: FontWeight.w300,
@@ -516,31 +516,43 @@ class _ExtrasSection extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            'خدمات إضافية يمكن إضافتها لأي باكدج',
+            'extras_subtitle'.tr(),
+            textAlign: isRtl ? TextAlign.right : TextAlign.left,
             style: GoogleFonts.montserrat(
               fontSize: 12,
               color: AppTheme.textMuted,
             ),
           ),
           const SizedBox(height: 32),
-          GridView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: isMobile ? 1 : 2,
-              crossAxisSpacing: 3,
-              mainAxisSpacing: 3,
-              childAspectRatio: isMobile ? 5 : 4,
-            ),
-            itemCount: extras.length,
-            itemBuilder: (ctx, i) => _ExtraItem(data: extras[i]),
-          ),
+          isMobile
+              ? Column(
+                  children: _extras
+                      .map((e) => Padding(
+                            padding: const EdgeInsets.only(bottom: 3),
+                            child: _ExtraItem(data: e),
+                          ))
+                      .toList(),
+                )
+              : GridView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  gridDelegate:
+                      const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 3,
+                    mainAxisSpacing: 3,
+                    childAspectRatio: 4,
+                  ),
+                  itemCount: _extras.length,
+                  itemBuilder: (ctx, i) => _ExtraItem(data: _extras[i]),
+                ),
         ],
       ),
     ).animate().fadeIn(delay: 400.ms, duration: 700.ms);
   }
 }
 
+// ─── Extra Item ────────────────────────────────────────────────
 class _ExtraItem extends StatefulWidget {
   final Map<String, String> data;
   const _ExtraItem({required this.data});
@@ -554,6 +566,8 @@ class _ExtraItemState extends State<_ExtraItem> {
 
   @override
   Widget build(BuildContext context) {
+    final isRtl = context.locale.languageCode == 'ar';
+
     return MouseRegion(
       onEnter: (_) => setState(() => _hover = true),
       onExit: (_) => setState(() => _hover = false),
@@ -565,12 +579,20 @@ class _ExtraItemState extends State<_ExtraItem> {
         ),
         decoration: BoxDecoration(
           color: AppTheme.bg,
-          border: Border(
-            left: BorderSide(
-              color: _hover ? AppTheme.gold : Colors.transparent,
-              width: 2,
-            ),
-          ),
+          // RTL: gold bar on the right (end); LTR: left (start)
+          border: isRtl
+              ? Border(
+                  right: BorderSide(
+                    color: _hover ? AppTheme.gold : Colors.transparent,
+                    width: 2,
+                  ),
+                )
+              : Border(
+                  left: BorderSide(
+                    color: _hover ? AppTheme.gold : Colors.transparent,
+                    width: 2,
+                  ),
+                ),
         ),
         child: Row(
           children: [
@@ -580,7 +602,8 @@ class _ExtraItemState extends State<_ExtraItem> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    widget.data['name'] ?? '',
+                    (widget.data['name'] ?? '').tr(),
+                    textAlign: isRtl ? TextAlign.right : TextAlign.left,
                     style: GoogleFonts.montserrat(
                       fontSize: 13,
                       color: AppTheme.textMuted,
@@ -588,7 +611,7 @@ class _ExtraItemState extends State<_ExtraItem> {
                   ),
                   if ((widget.data['duration'] ?? '').isNotEmpty)
                     Text(
-                      widget.data['duration']!,
+                      (widget.data['duration']!).tr(),
                       style: GoogleFonts.montserrat(
                         fontSize: 10,
                         color: AppTheme.textDim,
@@ -613,31 +636,41 @@ class _ExtraItemState extends State<_ExtraItem> {
   }
 }
 
-// ─── Notes Section ────────────────────────────────────────────
+// ─── Notes Section ─────────────────────────────────────────────
 class _NotesSection extends StatelessWidget {
-  final List<String> notes = const [
-    'تسليم الصور في خلال 15 لي 20 يوماً',
-    'في حالة الالغاء لا يتم استرداد العربون',
-    'يجب الالتزام بمواعيد السيشن المتفق عليها',
-    'اسعار الباكتجات غير شاملة لرسوم المكان (الاوكيشن)',
-  ];
+  const _NotesSection();
 
   @override
   Widget build(BuildContext context) {
     final isMobile = MediaQuery.of(context).size.width < 700;
+    final isRtl = context.locale.languageCode == 'ar';
+
+    final notes = [
+      'note_delivery'.tr(),
+      'note_cancellation'.tr(),
+      'note_punctuality'.tr(),
+      'note_location_fees'.tr(),
+    ];
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 28),
       decoration: BoxDecoration(
         color: AppTheme.goldDim,
-        border: const Border(
-          left: BorderSide(color: AppTheme.gold, width: 3),
-        ),
+        // RTL: accent bar on right (start of reading), LTR: left
+        border: isRtl
+            ? const Border(
+                right: BorderSide(color: AppTheme.gold, width: 3),
+              )
+            : const Border(
+                left: BorderSide(color: AppTheme.gold, width: 3),
+              ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'IMPORTANT NOTES',
+            'important_notes'.tr(),
+            textAlign: isRtl ? TextAlign.right : TextAlign.left,
             style: GoogleFonts.montserrat(
               fontSize: 10,
               fontWeight: FontWeight.w700,
@@ -662,6 +695,9 @@ class _NotesSection extends StatelessWidget {
                                 Expanded(
                                   child: Text(
                                     n,
+                                    textAlign: isRtl
+                                        ? TextAlign.right
+                                        : TextAlign.left,
                                     style: GoogleFonts.montserrat(
                                       fontSize: 13,
                                       color: AppTheme.textMuted,
@@ -693,6 +729,9 @@ class _NotesSection extends StatelessWidget {
                               Expanded(
                                 child: Text(
                                   n,
+                                  textAlign: isRtl
+                                      ? TextAlign.right
+                                      : TextAlign.left,
                                   style: GoogleFonts.montserrat(
                                     fontSize: 13,
                                     color: AppTheme.textMuted,
@@ -710,7 +749,7 @@ class _NotesSection extends StatelessWidget {
   }
 }
 
-// ─── Data Class ───────────────────────────────────────────────
+// ─── Data Class ────────────────────────────────────────────────
 class _Package {
   final String tier;
   final String name;

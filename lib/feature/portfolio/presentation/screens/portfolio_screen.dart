@@ -1,190 +1,254 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
+import 'dart:ui' as ui;
+
+import 'package:easy_localization/easy_localization.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/widgets/section_label.dart';
-import '../../../../core/constants/image_assets.dart';
+import '../../cubit/portfolio_cubit.dart';
 import '../../../home/presentation/widgets/footer_section.dart';
 
-class PortfolioScreen extends StatefulWidget {
+// Number of columns in the portfolio grid
+const _kColumns = 3;
+const _kMobileColumns = 1;
+
+class PortfolioScreen extends StatelessWidget {
   const PortfolioScreen({super.key});
 
   @override
-  State<PortfolioScreen> createState() => _PortfolioScreenState();
-}
-
-class _PortfolioScreenState extends State<PortfolioScreen> {
-  int _lightboxIndex = -1;
-
-  void _openLightbox(int index) => setState(() => _lightboxIndex = index);
-  void _closeLightbox() => setState(() => _lightboxIndex = -1);
-  void _prevImage() {
-    if (_lightboxIndex > 0) setState(() => _lightboxIndex--);
-  }
-  void _nextImage() {
-    if (_lightboxIndex < portfolioImages.length - 1) setState(() => _lightboxIndex++);
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final isMobile = MediaQuery.of(context).size.width < 700;
-
-    return Stack(
-      children: [
-        SingleChildScrollView(
-          child: Column(
-            children: [
-              // Hero banner
-              _PortfolioHero(),
-
-              // Grid
-              Container(
-                color: AppTheme.bgAlt,
-                padding: EdgeInsets.symmetric(
-                  horizontal: isMobile ? 12 : 60,
-                  vertical: 80,
-                ),
-                child: Column(
-                  children: [
-                    const SectionLabel(text: 'Album Villa'),
-                    const SizedBox(height: 16),
-                    RichText(
-                      textAlign: TextAlign.center,
-                      text: TextSpan(
-                        children: [
-                          TextSpan(
-                            text: 'A Wedding\n',
-                            style: GoogleFonts.cormorantGaramond(
-                              fontSize: isMobile ? 36 : 52,
-                              fontWeight: FontWeight.w300,
-                              color: AppTheme.textPrimary,
-                              height: 1.2,
-                            ),
-                          ),
-                          TextSpan(
-                            text: 'Story in Full',
-                            style: GoogleFonts.cormorantGaramond(
-                              fontSize: isMobile ? 36 : 52,
-                              fontWeight: FontWeight.w300,
-                              fontStyle: FontStyle.italic,
-                              color: AppTheme.gold,
-                              height: 1.2,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 50),
-                    _PortfolioMasonryGrid(
-                      images: portfolioImages,
-                      onTap: _openLightbox,
-                    ),
-                  ],
-                ),
-              ),
-
-              const FooterSection(),
-            ],
-          ),
-        ),
-
-        // Lightbox
-        if (_lightboxIndex >= 0)
-          _Lightbox(
-            images: portfolioImages,
-            index: _lightboxIndex,
-            onClose: _closeLightbox,
-            onPrev: _prevImage,
-            onNext: _nextImage,
-          ),
-      ],
+    // Listen to locale
+    context.locale;
+    return BlocProvider(
+      create: (_) => PortfolioCubit(),
+      child: const _PortfolioView(),
     );
   }
 }
 
-// ─── Portfolio Hero ────────────────────────────────────────────
+// ─── Main View ────────────────────────────────────────────────
+class _PortfolioView extends StatelessWidget {
+  const _PortfolioView();
+
+  @override
+  Widget build(BuildContext context) {
+    final isMobile = MediaQuery.of(context).size.width < 700;
+    final isRtl = context.locale.languageCode == 'ar';
+
+    return BlocBuilder<PortfolioCubit, PortfolioState>(
+      builder: (context, state) {
+        return Stack(
+          children: [
+            // ── Main scroll content
+            CustomScrollView(
+              slivers: [
+                SliverToBoxAdapter(child: _PortfolioHero()),
+                SliverToBoxAdapter(
+                  child: Container(
+                    color: AppTheme.bgAlt,
+                    padding: EdgeInsets.symmetric(
+                      horizontal: isMobile ? 12 : 60,
+                      vertical: 40,
+                    ),
+                    child: Column(
+                      children: [
+                        SectionLabel(text: 'portfolio_story_label'.tr()),
+                        const SizedBox(height: 16),
+                        RichText(
+                          textAlign: TextAlign.center,
+                          text: TextSpan(
+                            children: [
+                              TextSpan(
+                                text: '${'portfolio_story_title_1'.tr()}\n',
+                                style: GoogleFonts.cormorantGaramond(
+                                  fontSize: isMobile ? 36 : 52,
+                                  fontWeight: FontWeight.w300,
+                                  color: AppTheme.textPrimary,
+                                  height: 1.2,
+                                ),
+                              ),
+                              TextSpan(
+                                text: 'portfolio_story_title_2'.tr(),
+                                style: GoogleFonts.cormorantGaramond(
+                                  fontSize: isMobile ? 36 : 52,
+                                  fontWeight: FontWeight.w300,
+                                  fontStyle: FontStyle.italic,
+                                  color: AppTheme.gold,
+                                  height: 1.2,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                SliverPadding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: isMobile ? 12 : 60,
+                    vertical: 20,
+                  ),
+                  sliver: state.isLoaded
+                      ? _PortfolioSliverGrid(images: state.images)
+                      : const SliverToBoxAdapter(
+                          child: Center(
+                            child: Padding(
+                              padding: EdgeInsets.all(80),
+                              child: CircularProgressIndicator(
+                                color: AppTheme.gold,
+                                strokeWidth: 1,
+                              ),
+                            ),
+                          ),
+                        ),
+                ),
+                const SliverToBoxAdapter(child: FooterSection()),
+              ],
+            ),
+
+            // ── Lightbox (only paints when open)
+            if (state.isLightboxOpen)
+              RepaintBoundary(
+                child: _Lightbox(
+                  images: state.images,
+                  index: state.lightboxIndex,
+                  onClose: () => context.read<PortfolioCubit>().closeLightbox(),
+                  onPrev: () => context.read<PortfolioCubit>().prevImage(),
+                  onNext: () => context.read<PortfolioCubit>().nextImage(),
+                ),
+              ),
+          ],
+        );
+      },
+    );
+  }
+}
+
+// ─── Hero ─────────────────────────────────────────────────────
 class _PortfolioHero extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 380,
-      child: Stack(
-        fit: StackFit.expand,
-        children: [
-          Image.asset(portfolioImages[3], fit: BoxFit.cover),
-          Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  AppTheme.bg.withOpacity(0.85),
-                  AppTheme.bg.withOpacity(0.45),
-                ],
-                begin: Alignment.bottomCenter,
-                end: Alignment.topCenter,
+    return BlocBuilder<PortfolioCubit, PortfolioState>(
+      builder: (context, state) {
+        if (!state.isLoaded) return const SizedBox(height: 380);
+        return SizedBox(
+          height: 380,
+          child: Stack(
+            fit: StackFit.expand,
+            children: [
+              Image.asset(
+                state.images[3],
+                fit: BoxFit.cover,
+                cacheWidth: MediaQuery.of(context).size.width < 700 ? 800 : 1920,
               ),
-            ),
-          ),
-          Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const SizedBox(height: 90),
-                const SectionLabel(text: 'Our Work'),
-                const SizedBox(height: 20),
-                Text(
-                  'Portfolio',
-                  style: GoogleFonts.cormorantGaramond(
-                    fontSize: 72,
-                    fontWeight: FontWeight.w300,
-                    color: AppTheme.textPrimary,
+              Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      AppTheme.bg.withOpacity(0.85),
+                      AppTheme.bg.withOpacity(0.45),
+                    ],
+                    begin: Alignment.bottomCenter,
+                    end: Alignment.topCenter,
                   ),
-                ).animate().fadeIn(duration: 800.ms).slideY(begin: 0.2, end: 0),
-              ],
-            ),
+                ),
+              ),
+              Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const SizedBox(height: 90),
+                    SectionLabel(text: 'portfolio_page_label'.tr()),
+                    const SizedBox(height: 20),
+                    Text(
+                      'portfolio_page_title'.tr(),
+                      style: GoogleFonts.cormorantGaramond(
+                        fontSize: 72,
+                        fontWeight: FontWeight.w300,
+                        color: AppTheme.textPrimary,
+                      ),
+                    ).animate().fadeIn(duration: 800.ms).slideY(begin: 0.2, end: 0),
+                  ],
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 }
 
-// ─── Masonry Grid ─────────────────────────────────────────────
-class _PortfolioMasonryGrid extends StatelessWidget {
+// ─── Grid (SliverList of rows = same lazy behaviour as ListView.builder) ────
+class _PortfolioSliverGrid extends StatelessWidget {
   final List<String> images;
-  final void Function(int) onTap;
-  const _PortfolioMasonryGrid({required this.images, required this.onTap});
+  const _PortfolioSliverGrid({required this.images});
 
   @override
   Widget build(BuildContext context) {
     final isMobile = MediaQuery.of(context).size.width < 700;
-    final cols = isMobile ? 1 : 3;
+    final cols = isMobile ? _kMobileColumns : _kColumns;
+    final rowCount = (images.length / cols).ceil();
 
-    return GridView.builder(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: cols,
-        crossAxisSpacing: 4,
-        mainAxisSpacing: 4,
-        childAspectRatio: 0.75,
-      ),
-      itemCount: images.length,
-      itemBuilder: (ctx, i) => _GridItem(
-        imagePath: images[i],
-        index: i,
-        onTap: () => onTap(i),
+    return SliverList(
+      delegate: SliverChildBuilderDelegate(
+        // These two flags let Flutter dispose off-screen items from memory
+        addAutomaticKeepAlives: false,
+        addRepaintBoundaries: false, // managed manually below
+        childCount: rowCount,
+        (ctx, row) {
+          final startIdx = row * cols;
+          return Padding(
+            padding: const EdgeInsets.only(bottom: 4),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: List.generate(cols, (col) {
+                final i = startIdx + col;
+                if (i >= images.length) {
+                  return const Expanded(child: SizedBox());
+                }
+                return Expanded(
+                  child: Padding(
+                    padding: EdgeInsets.only(left: col == 0 ? 0 : 4),
+                    child: RepaintBoundary(
+                      child: _GridItem(
+                        key: ValueKey(images[i]),
+                        imagePath: images[i],
+                        isMobile: isMobile,
+                        onTap: () =>
+                            ctx.read<PortfolioCubit>().openLightbox(i),
+                      ),
+                    ),
+                  ),
+                );
+              }),
+            ),
+          );
+        },
       ),
     );
   }
 }
 
+// ─── Grid Item ────────────────────────────────────────────────
+// NOTE: No flutter_animate here — animations during scroll cause jank.
+// Hover effects are enough for a premium feel without hurting performance.
 class _GridItem extends StatefulWidget {
   final String imagePath;
-  final int index;
+  final bool isMobile;
   final VoidCallback onTap;
-  const _GridItem({required this.imagePath, required this.index, required this.onTap});
+
+  const _GridItem({
+    super.key,
+    required this.imagePath,
+    required this.isMobile,
+    required this.onTap,
+  });
 
   @override
   State<_GridItem> createState() => _GridItemState();
@@ -201,53 +265,58 @@ class _GridItemState extends State<_GridItem> {
       cursor: SystemMouseCursors.click,
       child: GestureDetector(
         onTap: widget.onTap,
-        child: ClipRect(
-          child: Stack(
-            fit: StackFit.expand,
-            children: [
-              AnimatedScale(
-                scale: _hover ? 1.06 : 1.0,
-                duration: const Duration(milliseconds: 600),
-                curve: Curves.easeOut,
-                child: Image.asset(widget.imagePath, fit: BoxFit.cover),
-              ),
-              AnimatedOpacity(
-                opacity: _hover ? 1 : 0,
-                duration: const Duration(milliseconds: 350),
-                child: Container(
-                  color: AppTheme.bg.withOpacity(0.55),
-                  child: Center(
-                    child: Container(
-                      padding: const EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: AppTheme.gold.withOpacity(0.9),
-                      ),
-                      child: const Icon(
-                        Icons.zoom_in,
-                        color: AppTheme.bg,
-                        size: 26,
+        child: SizedBox(
+          height: widget.isMobile ? 300 : 370,
+          child: ClipRect(
+            child: Stack(
+              fit: StackFit.expand,
+              children: [
+                // Image: lower cacheWidth on mobile = much less GPU memory
+                AnimatedScale(
+                  scale: _hover ? 1.06 : 1.0,
+                  duration: const Duration(milliseconds: 500),
+                  curve: Curves.easeOut,
+                  child: Image.asset(
+                    widget.imagePath,
+                    fit: BoxFit.cover,
+                    cacheWidth: widget.isMobile ? 360 : 680,
+                  ),
+                ),
+                // Hover overlay — desktop only (mobile has no hover)
+                AnimatedOpacity(
+                  opacity: _hover ? 1.0 : 0.0,
+                  duration: const Duration(milliseconds: 300),
+                  child: const ColoredBox(
+                    color: Colors.black54,
+                    child: Center(
+                      child: DecoratedBox(
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: AppTheme.gold,
+                        ),
+                        child: Padding(
+                          padding: EdgeInsets.all(12),
+                          child: Icon(Icons.zoom_in,
+                              color: AppTheme.bg, size: 26),
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
-      )
-          .animate()
-          .fadeIn(
-            delay: Duration(milliseconds: (widget.index % 9) * 60),
-            duration: 600.ms,
-          )
-          .slideY(begin: 0.08, end: 0),
+      ),
     );
   }
 }
 
 // ─── Lightbox ─────────────────────────────────────────────────
-class _Lightbox extends StatelessWidget {
+// StatefulWidget so the PageController persists across state rebuilds.
+// Without this, every prev/next tap recreates the controller at initialPage
+// and the gallery never actually moves.
+class _Lightbox extends StatefulWidget {
   final List<String> images;
   final int index;
   final VoidCallback onClose;
@@ -263,97 +332,157 @@ class _Lightbox extends StatelessWidget {
   });
 
   @override
+  State<_Lightbox> createState() => _LightboxState();
+}
+
+class _LightboxState extends State<_Lightbox> {
+  late final PageController _ctrl;
+
+  @override
+  void initState() {
+    super.initState();
+    _ctrl = PageController(initialPage: widget.index);
+  }
+
+  @override
+  void didUpdateWidget(_Lightbox old) {
+    super.didUpdateWidget(old);
+    if (old.index != widget.index && _ctrl.hasClients) {
+      _ctrl.animateToPage(
+        widget.index,
+        duration: const Duration(milliseconds: 350),
+        curve: Curves.easeInOut,
+      );
+    }
+  }
+
+  @override
+  void dispose() {
+    _ctrl.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    // تحديد اتجاه اللغة الحالية
+    final isRtl = EasyLocalization.of(context)?.locale.languageCode == 'ar';
+
     return GestureDetector(
-      onTap: onClose,
-      child: Container(
+      onTap: widget.onClose,
+      child: ColoredBox(
         color: Colors.black.withOpacity(0.96),
         child: Stack(
           children: [
-            // Image viewer
+            // ── 1. معرض الصور
             PhotoViewGallery.builder(
-              itemCount: images.length,
-              pageController: PageController(initialPage: index),
+              itemCount: widget.images.length,
+              pageController: _ctrl,
+              onPageChanged: (i) {
+                // مزامنة الكيوبيت عند السحب باليد
+                if (i > widget.index) {
+                  widget.onNext();
+                } else if (i < widget.index) {
+                  widget.onPrev();
+                }
+              },
               builder: (ctx, i) => PhotoViewGalleryPageOptions(
-                imageProvider: AssetImage(images[i]),
+                imageProvider: ResizeImage(AssetImage(widget.images[i]), width: 1600),
                 minScale: PhotoViewComputedScale.contained,
                 maxScale: PhotoViewComputedScale.covered * 2,
               ),
               backgroundDecoration: const BoxDecoration(color: Colors.transparent),
             ),
 
-            // Close
+            // ── 2. زر الإغلاق (Close Icon)
+            // نضعه في الزاوية العلوية (يمين في الإنجليزي، يسار في العربي)
             Positioned(
-              top: 30,
-              right: 30,
+              top: 140,
+              right: isRtl ? null : 20,
+              left: isRtl ? 20 : null,
               child: GestureDetector(
-                onTap: onClose,
+                onTap: widget.onClose,
                 child: Container(
-                  width: 48,
-                  height: 48,
+                  width: 50,
+                  height: 50,
                   decoration: BoxDecoration(
-                    color: AppTheme.surface.withOpacity(0.8),
-                    border: Border.all(color: AppTheme.border),
+                    color: Colors.black.withOpacity(0.5),
+                    shape: BoxShape.circle,
+                    border: Border.all(color: Colors.white24),
                   ),
-                  child: const Icon(Icons.close, color: AppTheme.textPrimary),
+                  child: const Icon(Icons.close, color: Colors.white, size: 28),
                 ),
               ),
             ),
 
-            // Prev
+            // ── 3. سهم السابق (Prev)
             Positioned(
-              left: 20,
+              left: isRtl ? null : 20,
+              right: isRtl ? 20 : null,
               top: 0,
               bottom: 0,
               child: Center(
                 child: GestureDetector(
-                  onTap: onPrev,
+                  onTap: widget.onPrev,
                   child: Container(
-                    width: 56,
-                    height: 56,
+                    padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
                       color: AppTheme.surface.withOpacity(0.7),
                       border: Border.all(color: AppTheme.border),
                     ),
-                    child: const Icon(Icons.chevron_left, color: AppTheme.textPrimary, size: 32),
+                    child: Icon(
+                      isRtl ? Icons.chevron_right : Icons.chevron_left,
+                      color: AppTheme.textPrimary,
+                      size: 32,
+                    ),
                   ),
                 ),
               ),
             ),
 
-            // Next
+            // ── 4. سهم التالي (Next)
             Positioned(
-              right: 20,
+              right: isRtl ? null : 20,
+              left: isRtl ? 20 : null,
               top: 0,
               bottom: 0,
               child: Center(
                 child: GestureDetector(
-                  onTap: onNext,
+                  onTap: widget.onNext,
                   child: Container(
-                    width: 56,
-                    height: 56,
+                    padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
                       color: AppTheme.surface.withOpacity(0.7),
                       border: Border.all(color: AppTheme.border),
                     ),
-                    child: const Icon(Icons.chevron_right, color: AppTheme.textPrimary, size: 32),
+                    child: Icon(
+                      isRtl ? Icons.chevron_left : Icons.chevron_right,
+                      color: AppTheme.textPrimary,
+                      size: 32,
+                    ),
                   ),
                 ),
               ),
             ),
 
-            // Counter
+            // ── 5. العداد (Counter)
             Positioned(
-              bottom: 30,
+              bottom: 40,
               left: 0,
               right: 0,
               child: Center(
-                child: Text(
-                  '${index + 1} / ${images.length}',
-                  style: GoogleFonts.montserrat(
-                    fontSize: 12,
-                    color: AppTheme.textMuted,
-                    letterSpacing: 0.2,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  decoration: BoxDecoration(
+                    color: Colors.black.withOpacity(0.5),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Text(
+                    '${widget.index + 1} / ${widget.images.length}',
+                    style: GoogleFonts.montserrat(
+                      fontSize: 14,
+                      color: Colors.white,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
                 ),
               ),

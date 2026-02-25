@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'dart:ui' as ui;
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../../../core/theme/app_theme.dart';
 
 class FooterSection extends StatelessWidget {
@@ -40,7 +43,8 @@ class FooterSection extends StatelessWidget {
               children: [
                 Expanded(
                   child: Text(
-                    '© ${DateTime.now().year} iBrahiim Photography. All rights reserved.',
+                    '© ${DateTime.now().year} iBrahiim Photography. ${'footer_rights'.tr()}',
+                    textAlign: isMobile ? TextAlign.center : (context.locale.languageCode == 'ar' ? TextAlign.right : TextAlign.left),
                     style: GoogleFonts.montserrat(
                       fontSize: 11,
                       color: AppTheme.textDim,
@@ -49,7 +53,7 @@ class FooterSection extends StatelessWidget {
                 ),
                 if (!isMobile)
                   Text(
-                    'الحجز عبر انستا أو كاش: 01155699971',
+                    'contact_payment_value'.tr(),
                     style: GoogleFonts.montserrat(
                       fontSize: 11,
                       color: AppTheme.textDim,
@@ -64,14 +68,16 @@ class FooterSection extends StatelessWidget {
   }
 
   Widget _buildDesktop(BuildContext context) {
+    final isRtl = context.locale.languageCode == 'ar';
     return Row(
+      textDirection: isRtl ? ui.TextDirection.rtl : ui.TextDirection.ltr,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // Brand
         Expanded(
           flex: 2,
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: isRtl ? CrossAxisAlignment.end : CrossAxisAlignment.start,
             children: [
               Text(
                 'iBrahiim',
@@ -92,7 +98,8 @@ class FooterSection extends StatelessWidget {
               ),
               const SizedBox(height: 20),
               Text(
-                'نصور اللحظات مش بس الصور — احنا بنحكي حكايتك للأبد.',
+                'footer_tagline'.tr(),
+                textAlign: isRtl ? TextAlign.right : TextAlign.left,
                 style: GoogleFonts.montserrat(
                   fontSize: 12,
                   color: AppTheme.textDim,
@@ -107,34 +114,30 @@ class FooterSection extends StatelessWidget {
         // Quick Links
         Expanded(
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: isRtl ? CrossAxisAlignment.end : CrossAxisAlignment.start,
             children: [
-              _FooterHeading('Quick Links'),
+              _FooterHeading('footer_quick_links'.tr()),
               const SizedBox(height: 16),
-              _FooterLink('Home', () => context.go('/')),
-              _FooterLink('Portfolio', () => context.go('/portfolio')),
-              _FooterLink('Packages', () => context.go('/packages')),
-              _FooterLink('Book a Date', () => context.go('/booking')),
+              _FooterLink('nav_home'.tr(), () => context.go('/')),
+              _FooterLink('nav_portfolio'.tr(), () => context.go('/portfolio')),
+              _FooterLink('nav_packages'.tr(), () => context.go('/packages')),
+              _FooterLink('nav_book'.tr(), () => context.go('/booking')),
             ],
           ),
         ),
         // Contact
         Expanded(
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: isRtl ? CrossAxisAlignment.end : CrossAxisAlignment.start,
             children: [
-              _FooterHeading('Contact'),
+              _FooterHeading('footer_contact'.tr()),
               const SizedBox(height: 16),
+              _ContactLink('📱 01155699971', 'tel:01155699971'),
+              _ContactLink('📸 @HEEMA.GAMAL_PH', 'https://www.instagram.com/heema.gamal_ph'),
+              _ContactLink('📍 ${'location_title'.tr()}', 'https://www.google.com/maps/search/?api=1&query=25+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%A7%D9%84%D8%B4%D8%B1%D9%83%D8%A7%D8%AA+%D8%A7%D9%84%D8%B2%D8%A7%D9%88%D9%8A%D8%A9+%D8%A7%D9%84%D8%AD%D9%85%D8%B1%D8%A7%D8%A1+%D8%A7%D9%84%D9%82%D8%A7%D9%87%D8%B1%D8%A9'),
               Text(
-                '📱 01155699971',
-                style: GoogleFonts.montserrat(fontSize: 12, color: AppTheme.textDim, height: 2),
-              ),
-              Text(
-                '📸 @HEEMA.GAMALPH',
-                style: GoogleFonts.montserrat(fontSize: 12, color: AppTheme.textDim, height: 2),
-              ),
-              Text(
-                '💳 كاش / فودافون كاش / بطاقات',
+                '💳 ${'contact_payment_value'.tr()}',
+                textAlign: isRtl ? TextAlign.right : TextAlign.left,
                 style: GoogleFonts.montserrat(fontSize: 12, color: AppTheme.textDim, height: 2),
               ),
             ],
@@ -145,6 +148,7 @@ class FooterSection extends StatelessWidget {
   }
 
   Widget _buildMobile(BuildContext context) {
+    final isRtl = context.locale.languageCode == 'ar';
     return Column(
       children: [
         Text(
@@ -171,25 +175,19 @@ class FooterSection extends StatelessWidget {
           spacing: 24,
           runSpacing: 8,
           children: [
-            _FooterLink('Home', () => context.go('/')),
-            _FooterLink('Portfolio', () => context.go('/portfolio')),
-            _FooterLink('Packages', () => context.go('/packages')),
-            _FooterLink('Book a Date', () => context.go('/booking')),
+            _FooterLink('nav_home'.tr(), () => context.go('/')),
+            _FooterLink('nav_portfolio'.tr(), () => context.go('/portfolio')),
+            _FooterLink('nav_packages'.tr(), () => context.go('/packages')),
+            _FooterLink('nav_book'.tr(), () => context.go('/booking')),
           ],
         ),
         const SizedBox(height: 24),
+        _ContactLink('📱 01155699971   •   📸 @HEEMA.GAMAL_PH', 'https://www.instagram.com/heema.gamal_ph'),
+        const SizedBox(height: 8),
+        _ContactLink('📍 ${'location_address'.tr()}', 'https://www.google.com/maps/search/?api=1&query=25+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%A7%D9%84%D8%B4%D8%B1%D9%83%D8%A7%D8%AA+%D8%A7%D9%84%D8%B2%D8%A7%D9%88%D9%8A%D8%A9+%D8%A7%D9%84%D8%AD%D9%85%D8%B1%D8%A7%D8%A1+%D8%A7%D9%84%D9%82%D8%A7%D9%87%D8%B1%D8%A9'),
+        const SizedBox(height: 24),
         Text(
-          '📱 01155699971   •   📸 @HEEMA.GAMALPH',
-          textAlign: TextAlign.center,
-          style: GoogleFonts.montserrat(
-            fontSize: 11,
-            color: AppTheme.textDim,
-            height: 1.8,
-          ),
-        ),
-        const SizedBox(height: 16),
-        Text(
-          '© ${DateTime.now().year} iBrahiim Photography. All rights reserved.',
+          '© ${DateTime.now().year} iBrahiim Photography. ${'footer_rights'.tr()}',
           textAlign: TextAlign.center,
           style: GoogleFonts.montserrat(
             fontSize: 10,
@@ -202,14 +200,48 @@ class FooterSection extends StatelessWidget {
   }
 }
 
+class _ContactLink extends StatelessWidget {
+  final String label;
+  final String url;
+  const _ContactLink(this.label, this.url);
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: () async {
+        final uri = Uri.parse(url);
+        if (await canLaunchUrl(uri)) {
+          await launchUrl(uri, mode: LaunchMode.externalApplication);
+        }
+      },
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 4),
+        child: Text(
+          label,
+          textAlign: TextAlign.center,
+          style: GoogleFonts.montserrat(
+            fontSize: 11,
+            color: AppTheme.textDim,
+            height: 1.8,
+            decoration: TextDecoration.underline,
+            decorationColor: AppTheme.textDim.withOpacity(0.3),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 class _FooterHeading extends StatelessWidget {
   final String text;
   const _FooterHeading(this.text);
 
   @override
   Widget build(BuildContext context) {
+    final isRtl = context.locale.languageCode == 'ar';
     return Text(
       text.toUpperCase(),
+      textAlign: isRtl ? TextAlign.right : TextAlign.left,
       style: GoogleFonts.montserrat(
         fontSize: 9,
         fontWeight: FontWeight.w700,

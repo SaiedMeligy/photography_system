@@ -2,13 +2,21 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:easy_localization/easy_localization.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/widgets/section_label.dart';
 
-class TestimonialsPreview extends StatelessWidget {
-  TestimonialsPreview({super.key});
+import '../../../../core/widgets/gold_button.dart';
 
-  final List<Map<String, String>> testimonials = [
+class TestimonialsPreview extends StatefulWidget {
+  const TestimonialsPreview({super.key});
+
+  @override
+  State<TestimonialsPreview> createState() => _TestimonialsPreviewState();
+}
+
+class _TestimonialsPreviewState extends State<TestimonialsPreview> {
+  final List<Map<String, String>> _testimonials = [
     {
       'name': 'محمد و فاطمة',
       'event': 'فرح نوفمبر 2024',
@@ -46,6 +54,19 @@ class TestimonialsPreview extends StatelessWidget {
     },
   ];
 
+  void _showAddReview() {
+    showDialog(
+      context: context,
+      builder: (ctx) => _AddReviewDialog(
+        onAdd: (review) {
+          setState(() {
+            _testimonials.insert(0, review);
+          });
+        },
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final isMobile = MediaQuery.of(context).size.width < 700;
@@ -59,14 +80,14 @@ class TestimonialsPreview extends StatelessWidget {
             padding: EdgeInsets.symmetric(horizontal: isMobile ? 24 : 80),
             child: Column(
               children: [
-                const SectionLabel(text: 'Client Love'),
+                SectionLabel(text: 'section_testimonials'.tr()),
                 const SizedBox(height: 20),
                 RichText(
                   textAlign: TextAlign.center,
                   text: TextSpan(
                     children: [
                       TextSpan(
-                        text: 'What Our\n',
+                        text: '${'testimonials_title_1'.tr()}\n',
                         style: GoogleFonts.cormorantGaramond(
                           fontSize: isMobile ? 36 : 52,
                           fontWeight: FontWeight.w300,
@@ -75,7 +96,7 @@ class TestimonialsPreview extends StatelessWidget {
                         ),
                       ),
                       TextSpan(
-                        text: 'Couples Say',
+                        text: 'testimonials_title_2'.tr(),
                         style: GoogleFonts.cormorantGaramond(
                           fontSize: isMobile ? 36 : 52,
                           fontWeight: FontWeight.w300,
@@ -96,10 +117,153 @@ class TestimonialsPreview extends StatelessWidget {
           // Auto-scrolling testimonials
           SizedBox(
             height: 260,
-            child: _TestimonialsCarousel(testimonials: testimonials),
+            child: _TestimonialsCarousel(testimonials: _testimonials),
           ),
+
+          const SizedBox(height: 50),
+
+          GoldButton(
+            label: 'testimonials_form_btn'.tr(),
+            onTap: _showAddReview,
+            outline: true,
+            icon: Icons.rate_review_outlined,
+          ).animate().fadeIn(delay: 400.ms, duration: 700.ms),
         ],
       ),
+    );
+  }
+}
+
+// ─── Add Review Dialog ─────────────────────────────────────────
+class _AddReviewDialog extends StatefulWidget {
+  final Function(Map<String, String>) onAdd;
+  const _AddReviewDialog({required this.onAdd});
+
+  @override
+  State<_AddReviewDialog> createState() => _AddReviewDialogState();
+}
+
+class _AddReviewDialogState extends State<_AddReviewDialog> {
+  final _formKey = GlobalKey<FormState>();
+  final _nameCtrl = TextEditingController();
+  final _eventCtrl = TextEditingController();
+  final _textCtrl = TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      backgroundColor: AppTheme.surface,
+      shape: RoundedRectangleBorder(
+        side: const BorderSide(color: AppTheme.border),
+        borderRadius: BorderRadius.zero,
+      ),
+      child: Container(
+        width: 500,
+        padding: const EdgeInsets.all(40),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'testimonial_form_title'.tr(),
+                style: GoogleFonts.cormorantGaramond(
+                  fontSize: 32,
+                  fontWeight: FontWeight.w300,
+                  color: AppTheme.textPrimary,
+                ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                'testimonial_form_subtitle'.tr(),
+                style: GoogleFonts.montserrat(
+                  fontSize: 12,
+                  color: AppTheme.textMuted,
+                ),
+              ),
+              const SizedBox(height: 32),
+              _buildField('testimonial_form_name'.tr(), _nameCtrl),
+              const SizedBox(height: 20),
+              _buildField('testimonial_form_event'.tr(), _eventCtrl),
+              const SizedBox(height: 20),
+              _buildField('testimonial_form_text'.tr(), _textCtrl, maxLines: 4),
+              const SizedBox(height: 40),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  TextButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: Text(
+                      'CANCEL',
+                      style: GoogleFonts.montserrat(
+                        fontSize: 11,
+                        letterSpacing: 1,
+                        color: AppTheme.textDim,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 20),
+                  GoldButton(
+                    label: 'testimonial_form_submit'.tr(),
+                    onTap: () {
+                      if (_formKey.currentState!.validate()) {
+                        final initials = _nameCtrl.text.trim().split(' ')
+                            .take(2).map((e) => e.isNotEmpty ? e[0] : '').join('.');
+
+                        widget.onAdd({
+                          'name': _nameCtrl.text.trim(),
+                          'event': _eventCtrl.text.trim(),
+                          'text': _textCtrl.text.trim(),
+                          'initials': initials.toUpperCase(),
+                        });
+
+                        Navigator.pop(context);
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            backgroundColor: AppTheme.surface,
+                            content: Text(
+                              'testimonial_success'.tr(),
+                              style: GoogleFonts.montserrat(color: AppTheme.gold),
+                            ),
+                          ),
+                        );
+                      }
+                    },
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildField(String label, TextEditingController ctrl, {int maxLines = 1}) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label.toUpperCase(),
+          style: GoogleFonts.montserrat(
+            fontSize: 9,
+            fontWeight: FontWeight.w600,
+            letterSpacing: 0.2,
+            color: AppTheme.textDim,
+          ),
+        ),
+        const SizedBox(height: 8),
+        TextFormField(
+          controller: ctrl,
+          maxLines: maxLines,
+          style: GoogleFonts.montserrat(fontSize: 13, color: AppTheme.textPrimary),
+          validator: (v) => (v == null || v.trim().isEmpty) ? 'Required' : null,
+          decoration: const InputDecoration(
+            contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          ),
+        ),
+      ],
     );
   }
 }
@@ -151,6 +315,7 @@ class _TestimonialsCarouselState extends State<_TestimonialsCarousel> {
       onEnter: (_) => setState(() => _hovering = true),
       onExit: (_) => setState(() => _hovering = false),
       child: ListView.separated(
+        key: ValueKey(widget.testimonials.length), // Rebuild when list length changes
         controller: _ctrl,
         scrollDirection: Axis.horizontal,
         padding: const EdgeInsets.symmetric(horizontal: 40),

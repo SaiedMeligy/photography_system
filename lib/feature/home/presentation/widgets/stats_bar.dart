@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:easy_localization/easy_localization.dart';
 import '../../../../core/theme/app_theme.dart';
 
 class StatsBar extends StatelessWidget {
@@ -9,10 +10,10 @@ class StatsBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final stats = [
-      ('200+', 'Weddings Captured'),
-      ('5', 'Years Experience'),
-      ('98%', 'Happy Couples'),
-      ('50K+', 'Photos Delivered'),
+      ('stat_weddings_value'.tr(), 'stat_weddings'.tr()),
+      ('stat_years_value'.tr(),    'stat_years'.tr()),
+      ('stat_happy_value'.tr(),    'stat_happy'.tr()),
+      ('stat_photos_value'.tr(),   'stat_photos'.tr()),
     ];
     final isMobile = MediaQuery.of(context).size.width < 700;
 
@@ -85,14 +86,13 @@ class _StatItem extends StatelessWidget {
           ),
         ),
         if (showDivider)
-          Positioned(
-            right: 0,
-            top: '20%'.isEmpty ? 0 : null,
+          PositionedDirectional(
+            end: 0,
+            top: 20,
+            bottom: 20,
             child: Container(
               width: 1,
-              height: 60,
               color: AppTheme.border,
-              margin: const EdgeInsets.symmetric(vertical: 20),
             ),
           ),
       ],

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:easy_localization/easy_localization.dart';
 import '../../../../core/theme/app_theme.dart';
 
 class AppShell extends StatefulWidget {
@@ -15,12 +16,13 @@ class _AppShellState extends State<AppShell> {
   bool _scrolled = false;
   bool _menuOpen = false;
 
-  final List<_NavItem> _navItems = const [
-    _NavItem(label: 'Home',         path: '/'),
-    _NavItem(label: 'Portfolio',    path: '/portfolio'),
-    _NavItem(label: 'Packages',     path: '/packages'),
-    _NavItem(label: 'Booking',      path: '/booking'),
-    _NavItem(label: 'Testimonials', path: '/testimonials'),
+  // Nav items use translation keys
+  static const _navItems = [
+    _NavItem(labelKey: 'nav_home',         path: '/'),
+    _NavItem(labelKey: 'nav_portfolio',    path: '/portfolio'),
+    _NavItem(labelKey: 'nav_packages',     path: '/packages'),
+    _NavItem(labelKey: 'nav_book',         path: '/booking'),
+    _NavItem(labelKey: 'nav_testimonials', path: '/testimonials'),
   ];
 
   void _onScroll(double offset) {
@@ -34,6 +36,11 @@ class _AppShellState extends State<AppShell> {
         : ThemeMode.dark;
   }
 
+  void _toggleLang() {
+    final isAr = context.locale.languageCode == 'ar';
+    context.setLocale(isAr ? const Locale('en') : const Locale('ar'));
+  }
+
   @override
   Widget build(BuildContext context) {
     final isMobile = MediaQuery.of(context).size.width < 900;
@@ -43,6 +50,7 @@ class _AppShellState extends State<AppShell> {
     final textCol = isDark ? AppTheme.darkTextPrimary : AppTheme.lightTextPrimary;
     final textMutedCol = isDark ? AppTheme.darkTextMuted : AppTheme.lightTextMuted;
     final borderCol = isDark ? AppTheme.darkBorder : AppTheme.lightBorder;
+    final isAr = context.locale.languageCode == 'ar';
 
     return Scaffold(
       backgroundColor: isDark ? AppTheme.darkBg : AppTheme.lightBg,
@@ -129,7 +137,11 @@ class _AppShellState extends State<AppShell> {
                         onTap: () => context.go(item.path),
                       );
                     })),
-                    const SizedBox(width: 20),
+                    const SizedBox(width: 16),
+
+                    // 🌐 Language Toggle
+                    _LangToggle(isAr: isAr, onToggle: _toggleLang),
+                    const SizedBox(width: 8),
 
                     // 🌙/☀️ Theme Toggle
                     _ThemeToggle(isDark: isDark, onToggle: _toggleTheme),
@@ -137,6 +149,9 @@ class _AppShellState extends State<AppShell> {
                     const SizedBox(width: 24),
                     _BookNowBtn(onTap: () => context.go('/booking')),
                   ] else ...[
+                    // 🌐 Language Toggle (mobile)
+                    _LangToggle(isAr: isAr, onToggle: _toggleLang),
+                    const SizedBox(width: 4),
                     // 🌙/☀️ Theme Toggle (mobile)
                     _ThemeToggle(isDark: isDark, onToggle: _toggleTheme),
                     // Hamburger
@@ -154,24 +169,74 @@ class _AppShellState extends State<AppShell> {
             ),
           ),
 
-          // Mobile Menu — IgnorePointer when closed so it never blocks taps
-          IgnorePointer(
-            ignoring: !_menuOpen,
-            child: AnimatedOpacity(
-              duration: const Duration(milliseconds: 300),
-              opacity: _menuOpen ? 1.0 : 0.0,
-              child: _MobileMenu(
-                navItems: _navItems,
-                currentPath: location,
-                onItemTap: (path) {
-                  setState(() => _menuOpen = false);
-                  context.go(path);
-                },
-                onClose: () => setState(() => _menuOpen = false),
+          // Mobile Menu
+          Positioned.fill(
+            child: Visibility(
+              visible: _menuOpen,
+              child: IgnorePointer(
+                ignoring: !_menuOpen,
+                child: AnimatedOpacity(
+                  duration: const Duration(milliseconds: 300),
+                  opacity: _menuOpen ? 1.0 : 0.0,
+                  child: _MobileMenu(
+                    navItems: _navItems,
+                    currentPath: location,
+                    onItemTap: (path) {
+                      setState(() => _menuOpen = false);
+                      context.go(path);
+                    },
+                    onClose: () => setState(() => _menuOpen = false),
+                  ),
+                ),
               ),
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+// ─── Language Toggle ──────────────────────────────────────────
+class _LangToggle extends StatefulWidget {
+  final bool isAr;
+  final VoidCallback onToggle;
+  const _LangToggle({required this.isAr, required this.onToggle});
+
+  @override
+  State<_LangToggle> createState() => _LangToggleState();
+}
+
+class _LangToggleState extends State<_LangToggle> {
+  bool _hover = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return MouseRegion(
+      onEnter: (_) => setState(() => _hover = true),
+      onExit: (_) => setState(() => _hover = false),
+      cursor: SystemMouseCursors.click,
+      child: GestureDetector(
+        onTap: widget.onToggle,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 300),
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          decoration: BoxDecoration(
+            color: _hover ? AppTheme.goldDim : Colors.transparent,
+            border: Border.all(
+              color: _hover ? AppTheme.gold : AppTheme.gold.withOpacity(0.4),
+            ),
+          ),
+          child: Text(
+            widget.isAr ? 'EN' : 'عر',
+            style: GoogleFonts.montserrat(
+              fontSize: 11,
+              fontWeight: FontWeight.w700,
+              letterSpacing: 0.1,
+              color: AppTheme.gold,
+            ),
+          ),
+        ),
       ),
     );
   }
@@ -250,7 +315,7 @@ class _NavLinkState extends State<_NavLink> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                widget.item.label.toUpperCase(),
+                widget.item.labelKey.tr().toUpperCase(),
                 style: GoogleFonts.montserrat(
                   fontSize: 11,
                   fontWeight: FontWeight.w500,
@@ -303,7 +368,7 @@ class _BookNowBtnState extends State<_BookNowBtn> {
             border: Border.all(color: AppTheme.gold),
           ),
           child: Text(
-            'BOOK A DATE',
+            'nav_book'.tr().toUpperCase(),
             style: GoogleFonts.montserrat(
               fontSize: 11,
               fontWeight: FontWeight.w700,
@@ -352,7 +417,7 @@ class _MobileMenu extends StatelessWidget {
                     child: Padding(
                       padding: const EdgeInsets.symmetric(vertical: 16),
                       child: Text(
-                        item.label,
+                        item.labelKey.tr(),
                         style: GoogleFonts.cormorantGaramond(
                           fontSize: 52,
                           fontWeight: FontWeight.w300,
@@ -385,7 +450,7 @@ class _MobileMenu extends StatelessWidget {
 
 // ─── Data class ───────────────────────────────────────────────
 class _NavItem {
-  final String label;
+  final String labelKey;
   final String path;
-  const _NavItem({required this.label, required this.path});
+  const _NavItem({required this.labelKey, required this.path});
 }

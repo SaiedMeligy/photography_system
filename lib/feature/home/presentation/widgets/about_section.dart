@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:easy_localization/easy_localization.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/widgets/section_label.dart';
 import '../../../../core/constants/image_assets.dart';
@@ -52,90 +53,108 @@ class AboutSection extends StatelessWidget {
 class _ImagesStack extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final isMobile = MediaQuery.of(context).size.width < 900;
+    
     return SizedBox(
       height: 550,
       child: Stack(
         children: [
           // Main image
-          Positioned(
-            right: 0,
+          PositionedDirectional(
+            end: 0,
             top: 0,
-            child: ClipRect(
-              child: SizedBox(
-                width: MediaQuery.of(context).size.width < 900
-                    ? double.infinity
-                    : MediaQuery.of(context).size.width * 0.3,
-                height: 420,
-                child: Image.asset(
-                  portfolioImages[10],
-                  fit: BoxFit.cover,
+            start: isMobile ? 40 : null, // Give it some offset on mobile instead of full width
+            child: RepaintBoundary(
+              child: ClipRect(
+                child: SizedBox(
+                  width: isMobile
+                      ? null // Constraints from Positioned
+                      : MediaQuery.of(context).size.width * 0.3,
+                  height: 420,
+                  child: Image.asset(
+                    portfolioImages[10],
+                    fit: BoxFit.cover,
+                    cacheWidth: 800,
+                  ),
                 ),
               ),
-            ),
-          )
-              .animate()
-              .fadeIn(duration: 900.ms)
-              .slideX(begin: 0.1, end: 0),
+            )
+                .animate()
+                .fadeIn(duration: 900.ms)
+                .slideX(begin: 0.1, end: 0),
+          ),
 
           // Second image
-          Positioned(
-            left: 0,
+          PositionedDirectional(
+            start: 0,
             bottom: 0,
-            child: Container(
-              decoration: BoxDecoration(
-                border: Border.all(color: AppTheme.bg, width: 4),
-              ),
-              child: SizedBox(
-                width: MediaQuery.of(context).size.width < 900 ? 200 : 240,
-                height: 280,
-                child: Image.asset(
-                  portfolioImages[25],
-                  fit: BoxFit.cover,
+            child: RepaintBoundary(
+              child: Container(
+                decoration: BoxDecoration(
+                  border: Border.all(color: AppTheme.bg, width: 4),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.1),
+                      blurRadius: 20,
+                      offset: const Offset(0, 10),
+                    ),
+                  ],
+                ),
+                child: SizedBox(
+                  width: isMobile ? 180 : 240,
+                  height: 280,
+                  child: Image.asset(
+                    portfolioImages[25],
+                    fit: BoxFit.cover,
+                    cacheWidth: 500,
+                  ),
                 ),
               ),
-            ),
-          )
-              .animate()
-              .fadeIn(delay: 300.ms, duration: 900.ms)
-              .slideX(begin: -0.1, end: 0),
+            )
+                .animate()
+                .fadeIn(delay: 300.ms, duration: 900.ms)
+                .slideX(begin: -0.1, end: 0),
+          ),
 
           // Gold badge
-          Positioned(
-            right: 20,
-            bottom: 60,
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-              color: AppTheme.gold,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    '5+',
-                    style: GoogleFonts.cormorantGaramond(
-                      fontSize: 40,
-                      fontWeight: FontWeight.w300,
-                      color: AppTheme.bg,
-                      height: 1,
+          PositionedDirectional(
+            end: isMobile ? 10 : 20,
+            bottom: isMobile ? 80 : 60,
+            child: RepaintBoundary(
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                color: AppTheme.gold,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      'stat_years_value'.tr(),
+                      style: GoogleFonts.cormorantGaramond(
+                        fontSize: 40,
+                        fontWeight: FontWeight.w300,
+                        color: AppTheme.bg,
+                        height: 1,
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 2),
-                  Text(
-                    'YEARS\nEXPERIENCE',
-                    textAlign: TextAlign.center,
-                    style: GoogleFonts.montserrat(
-                      fontSize: 8,
-                      fontWeight: FontWeight.w700,
-                      letterSpacing: 0.15,
-                      color: AppTheme.bg,
+                    const SizedBox(height: 2),
+                    Text(
+                      'stat_years'.tr().toUpperCase(),
+                      textAlign: TextAlign.center,
+                      style: GoogleFonts.montserrat(
+                        fontSize: 8,
+                        fontWeight: FontWeight.w700,
+                        letterSpacing: 0.15,
+                        color: AppTheme.bg,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-          )
-              .animate()
-              .fadeIn(delay: 500.ms, duration: 700.ms)
-              .scale(begin: const Offset(0.8, 0.8)),
+            )
+                .animate()
+                .fadeIn(delay: 500.ms, duration: 700.ms)
+                .scale(begin: const Offset(0.8, 0.8)),
+          ),
         ],
       ),
     );
@@ -148,7 +167,7 @@ class _AboutContent extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const SectionLabel(text: 'About Me'),
+        SectionLabel(text: 'section_about'.tr()),
         const SizedBox(height: 20),
         Text(
           'iBrahiim',
@@ -163,7 +182,7 @@ class _AboutContent extends StatelessWidget {
           text: TextSpan(
             children: [
               TextSpan(
-                text: 'The Artist\n',
+                text: '${'about_title_1'.tr()}\n',
                 style: GoogleFonts.cormorantGaramond(
                   fontSize: 52,
                   fontWeight: FontWeight.w300,
@@ -172,7 +191,7 @@ class _AboutContent extends StatelessWidget {
                 ),
               ),
               TextSpan(
-                text: 'Behind the Lens',
+                text: 'about_title_2'.tr(),
                 style: GoogleFonts.cormorantGaramond(
                   fontSize: 52,
                   fontWeight: FontWeight.w300,
@@ -186,8 +205,7 @@ class _AboutContent extends StatelessWidget {
         ),
         const SizedBox(height: 28),
         Text(
-          'ببساطة، أنا مؤمن إن كل فرح له روح خاصة — وكل لحظة فيه حكاية. '
-          'من أول ضحكة للعروسة لما بتشوف نفسها، لحد آخر رقصة في الليل.',
+          'about_p1'.tr(),
           style: GoogleFonts.montserrat(
             fontSize: 16,
             color: AppTheme.textMuted,
@@ -197,8 +215,7 @@ class _AboutContent extends StatelessWidget {
         ),
         const SizedBox(height: 16),
         Text(
-          'بصورة ببساطة أكثر من 200 فرح، وكل صورة كانت من قلبي. '
-          'هدفي إنك من غير ما تقلق أي حاجة — تلاقي نفسك في كل صورة.',
+          'about_p2'.tr(),
           style: GoogleFonts.montserrat(
             fontSize: 16,
             color: AppTheme.textMuted,
@@ -210,13 +227,13 @@ class _AboutContent extends StatelessWidget {
         Container(
           padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
-            border: const Border(
-              left: BorderSide(color: AppTheme.gold, width: 3),
+            border: BorderDirectional(
+              start: const BorderSide(color: AppTheme.gold, width: 3),
             ),
             color: AppTheme.goldDim,
           ),
           child: Text(
-            '"بصور اللحظات، مش بس الصور"',
+            '"${'footer_tagline'.tr()}"',
             style: GoogleFonts.cormorantGaramond(
               fontSize: 22,
               fontStyle: FontStyle.italic,
@@ -230,8 +247,8 @@ class _AboutContent extends StatelessWidget {
           spacing: 40,
           runSpacing: 20,
           children: [
-            _Stat('01155699971', 'Phone / WhatsApp'),
-            _Stat('@HEEMA.GAMALPH', 'Instagram & Facebook'),
+            _Stat('01155699971', 'contact_phone_label'.tr()),
+            _Stat('@HEEMA.GAMAL_PH', 'contact_social_label'.tr()),
           ],
         ),
       ],

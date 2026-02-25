@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:intl/intl.dart';
+import 'package:easy_localization/easy_localization.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/widgets/section_label.dart';
 import '../../../../core/widgets/gold_button.dart';
@@ -40,13 +42,13 @@ class _ContactInfo extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const SectionLabel(text: 'Contact'),
+        SectionLabel(text: 'section_contact'.tr()),
         const SizedBox(height: 20),
         RichText(
           text: TextSpan(
             children: [
               TextSpan(
-                text: 'Let\'s Create\n',
+                text: '${'contact_title_1'.tr()}\n',
                 style: GoogleFonts.cormorantGaramond(
                   fontSize: 42,
                   fontWeight: FontWeight.w300,
@@ -55,7 +57,7 @@ class _ContactInfo extends StatelessWidget {
                 ),
               ),
               TextSpan(
-                text: 'Together',
+                text: 'contact_title_2'.tr(),
                 style: GoogleFonts.cormorantGaramond(
                   fontSize: 42,
                   fontWeight: FontWeight.w300,
@@ -70,40 +72,234 @@ class _ContactInfo extends StatelessWidget {
         const SizedBox(height: 40),
         _ContactItem(
           icon: Icons.phone_outlined,
-          label: 'Phone / WhatsApp',
+          label: 'contact_phone_label'.tr(),
           value: '01155699971',
           onTap: () => launchUrl(Uri.parse('tel:01155699971')),
         ),
         const SizedBox(height: 24),
         _ContactItem(
           icon: Icons.camera_alt_outlined,
-          label: 'Instagram & Facebook',
-          value: '@HEEMA.GAMALPH',
+          label: 'contact_social_label'.tr(),
+          value: '@HEEMA.GAMAL_PH',
           onTap: () => launchUrl(
-            Uri.parse('https://instagram.com/heema.gamalph'),
+            Uri.parse('https://www.instagram.com/heema.gamal_ph?igsh=eXhtZmI2a3Z3ODY4&utm_source=qr'),
           ),
         ),
         const SizedBox(height: 24),
-        _ContactItem(
-          icon: Icons.payment_outlined,
-          label: 'Booking & Payment',
-          value: 'Instagram DM أو كاش / فودافون كاش',
-          onTap: null,
-        ),
-        const SizedBox(height: 40),
+        // _ContactItem(
+        //   icon: Icons.payment_outlined,
+        //   label: 'contact_payment_label'.tr(),
+        //   value: 'contact_payment_value'.tr(),
+        //   onTap: null,
+        // ),
+        // const SizedBox(height: 32),
+
+        // ── خريطة الموقع ─────────────────────────────────────
+        _MapCard(),
+
+        const SizedBox(height: 32),
         // Social links
         Row(
           children: [
             _SocialBtn(icon: Icons.camera_alt, onTap: () => launchUrl(
-              Uri.parse('https://instagram.com/heema.gamalph'),
+              Uri.parse('https://www.instagram.com/heema.gamal_ph?igsh=eXhtZmI2a3Z3ODY4&utm_source=qr'),
             )),
             const SizedBox(width: 12),
             _SocialBtn(icon: Icons.facebook, onTap: () => launchUrl(
-              Uri.parse('https://facebook.com/HEEMA.GAMALPH'),
+              Uri.parse('https://www.facebook.com/share/1Awgm5KaaY/?mibextid=wwXIfr'),
             )),
           ],
         ),
       ],
+    );
+  }
+}
+
+// ─── Map Card ─────────────────────────────────────────────────
+class _MapCard extends StatefulWidget {
+  @override
+  State<_MapCard> createState() => _MapCardState();
+}
+
+class _MapCardState extends State<_MapCard> {
+  bool _hover = false;
+
+  static const _locationQuery = '25 شارع الشركات الزاوية الحمراء القاهرة';
+  static const _webMapsUrl = 'https://www.google.com/maps/search/?api=1&query=25+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%A7%D9%84%D8%B4%D8%B1%D9%83%D8%A7%D8%AA+%D8%A7%D9%84%D8%B2%D8%A7%D9%88%D9%8A%D8%A9+%D8%A7%D9%84%D8%AD%D9%85%D8%B1%D8%A7%D8%A1+%D8%A7%D9%84%D9%82%D8%A7%D9%87%D8%B1%D8%A9';
+
+  Future<void> _openMaps() async {
+    final geoUri = Uri.parse('geo:0,0?q=$_locationQuery');
+    final webUri = Uri.parse(_webMapsUrl);
+
+    try {
+      // Try native maps first (Android/iOS)
+      if (await canLaunchUrl(geoUri)) {
+        await launchUrl(geoUri);
+      } else {
+        // Fallback to web browser
+        await launchUrl(webUri, mode: LaunchMode.externalApplication);
+      }
+    } catch (e) {
+      // Last resort fallback
+      await launchUrl(webUri, mode: LaunchMode.externalApplication);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final isRtl = context.locale.languageCode == 'ar';
+    
+    return MouseRegion(
+      onEnter: (_) => setState(() => _hover = true),
+      onExit: (_) => setState(() => _hover = false),
+      child: GestureDetector(
+        onTap: _openMaps,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 300),
+          decoration: BoxDecoration(
+            color: AppTheme.surface,
+            border: Border(
+              left: isRtl 
+                ? BorderSide(color: AppTheme.border)
+                : BorderSide(color: _hover ? AppTheme.gold : AppTheme.border, width: 3),
+              right: isRtl
+                ? BorderSide(color: _hover ? AppTheme.gold : AppTheme.border, width: 3)
+                : BorderSide(color: AppTheme.border),
+              top: BorderSide(color: AppTheme.border),
+              bottom: BorderSide(color: AppTheme.border),
+            ),
+            boxShadow: _hover
+                ? [
+                    BoxShadow(
+                      color: AppTheme.gold.withOpacity(0.08),
+                      blurRadius: 20,
+                    )
+                  ]
+                : [],
+          ),
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Header row
+              Row(
+                children: [
+                  Container(
+                    width: 40,
+                    height: 40,
+                    decoration: BoxDecoration(
+                      color: AppTheme.goldDim,
+                      border: Border.all(color: AppTheme.gold),
+                    ),
+                    child: const Icon(
+                      Icons.location_on_outlined,
+                      color: AppTheme.gold,
+                      size: 20,
+                    ),
+                  ),
+                  const SizedBox(width: 14),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'location_title'.tr().toUpperCase(),
+                          style: GoogleFonts.montserrat(
+                            fontSize: 9,
+                            fontWeight: FontWeight.w700,
+                            letterSpacing: 0.2,
+                            color: AppTheme.textDim,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          'location_address'.tr(),
+                          style: GoogleFonts.montserrat(
+                            fontSize: 12,
+                            color: AppTheme.textMuted,
+                            height: 1.5,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 14),
+              // Map preview visual
+              Container(
+                height: 90,
+                decoration: BoxDecoration(
+                  color: AppTheme.bg,
+                  border: Border.all(color: AppTheme.border),
+                ),
+                child: Stack(
+                  children: [
+                    // Decorative grid
+                    ...List.generate(5, (i) => Positioned(
+                      left: 0, right: 0,
+                      top: i * 18.0,
+                      child: Container(height: 1, color: AppTheme.border),
+                    )),
+                    ...List.generate(7, (i) => Positioned(
+                      top: 0, bottom: 0,
+                      left: i * 46.0,
+                      child: Container(width: 1, color: AppTheme.border),
+                    )),
+                    // Pin
+                    Center(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Container(
+                            width: 32,
+                            height: 32,
+                            decoration: const BoxDecoration(
+                              color: AppTheme.gold,
+                              shape: BoxShape.circle,
+                            ),
+                            child: const Icon(
+                              Icons.location_on,
+                              color: AppTheme.bg,
+                              size: 18,
+                            ),
+                          ),
+                          Container(
+                            width: 2,
+                            height: 10,
+                            color: AppTheme.gold,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 12),
+              // Open Maps button
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Text(
+                    'location_open_maps'.tr(),
+                    style: GoogleFonts.montserrat(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w600,
+                      color: _hover ? AppTheme.gold : AppTheme.textDim,
+                    ),
+                  ),
+                  const SizedBox(width: 6),
+                  Icon(
+                    Icons.open_in_new,
+                    size: 14,
+                    color: _hover ? AppTheme.gold : AppTheme.textDim,
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
@@ -287,7 +483,7 @@ class _ContactFormState extends State<_ContactForm> {
                     color: AppTheme.gold, size: 20),
                 const SizedBox(width: 12),
                 Text(
-                  'تم فتح واتساب! رسالتك جاهزة للإرسال ✅',
+                  'form_success'.tr(),
                   style: GoogleFonts.montserrat(color: AppTheme.gold),
                 ),
               ],
@@ -301,7 +497,7 @@ class _ContactFormState extends State<_ContactForm> {
           SnackBar(
             backgroundColor: AppTheme.surface,
             content: Text(
-              'تعذّر فتح واتساب. تأكد إن التطبيق مثبّت.',
+              'form_error'.tr(),
               style: GoogleFonts.montserrat(color: Colors.redAccent),
             ),
           ),
@@ -321,7 +517,7 @@ class _ContactFormState extends State<_ContactForm> {
         children: [
           // ── العنوان ─────────────────────────────────────────
           Text(
-            'Send via WhatsApp',
+            'form_title'.tr(),
             style: GoogleFonts.cormorantGaramond(
               fontSize: 32,
               fontWeight: FontWeight.w300,
@@ -334,7 +530,7 @@ class _ContactFormState extends State<_ContactForm> {
               const Icon(Icons.chat_outlined, color: Color(0xFF25D366), size: 18),
               const SizedBox(width: 8),
               Text(
-                'ابعتلنا رسالة على واتساب مباشرة',
+                'form_hint'.tr(),
                 style: GoogleFonts.montserrat(
                   fontSize: 13,
                   color: AppTheme.textMuted,
@@ -348,33 +544,27 @@ class _ContactFormState extends State<_ContactForm> {
           Row(
             children: [
               Expanded(child: _buildField(
-                label: 'Full Name',
-                hint: 'اسمك الكامل',
+                label: 'form_name'.tr(),
+                hint: 'form_name_hint'.tr(),
                 controller: _nameCtrl,
                 validator: (v) => (v == null || v.trim().isEmpty)
-                    ? 'الاسم مطلوب' : null,
+                    ? 'form_name_error'.tr() : null,
               )),
               const SizedBox(width: 20),
               Expanded(child: _buildField(
-                label: 'Phone',
+                label: 'form_phone'.tr(),
                 hint: '01xxxxxxxxx',
                 controller: _phoneCtrl,
                 keyboardType: TextInputType.phone,
                 validator: (v) => (v == null || v.trim().length < 10)
-                    ? 'رقم غير صحيح' : null,
+                    ? 'form_phone_error'.tr() : null,
               )),
             ],
           ),
           const SizedBox(height: 20),
 
           // ── تاريخ الفرح ──────────────────────────────────────
-          _buildField(
-            label: 'Wedding Date',
-            hint: 'مثال: 15 مارس 2025',
-            controller: _dateCtrl,
-            validator: (v) => (v == null || v.trim().isEmpty)
-                ? 'التاريخ مطلوب' : null,
-          ),
+          _buildDateField(),
           const SizedBox(height: 20),
 
           // ── الباكدج ──────────────────────────────────────────
@@ -383,8 +573,8 @@ class _ContactFormState extends State<_ContactForm> {
 
           // ── رسالة إضافية ─────────────────────────────────────
           _buildField(
-            label: 'Message',
-            hint: 'أي تفاصيل إضافية... (اختياري)',
+            label: 'form_message'.tr(),
+            hint: 'form_message_hint'.tr(),
             controller: _messageCtrl,
             multiline: true,
           ),
@@ -392,7 +582,7 @@ class _ContactFormState extends State<_ContactForm> {
 
           // ── زرار الإرسال ─────────────────────────────────────
           GoldButton(
-            label: _sending ? 'جاري الفتح...' : 'إرسال على واتساب',
+            label: _sending ? 'form_sending'.tr() : 'form_send_btn'.tr(),
             onTap: _sending ? null : _sendWhatsApp,
             icon: Icons.chat_outlined,
           ),
@@ -437,12 +627,77 @@ class _ContactFormState extends State<_ContactForm> {
     );
   }
 
+  /// حقل التاريخ — بيفتح Calendar Dialog
+  Widget _buildDateField() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'form_date'.tr().toUpperCase(),
+          style: GoogleFonts.montserrat(
+            fontSize: 9,
+            fontWeight: FontWeight.w600,
+            letterSpacing: 0.2,
+            color: AppTheme.textMuted,
+          ),
+        ),
+        const SizedBox(height: 8),
+        GestureDetector(
+          onTap: () async {
+            final picked = await showDatePicker(
+              context: context,
+              initialDate: DateTime.now().add(const Duration(days: 30)),
+              firstDate: DateTime.now(),
+              lastDate: DateTime.now().add(const Duration(days: 730)),
+              builder: (ctx, child) => Theme(
+                data: Theme.of(ctx).copyWith(
+                  colorScheme: ColorScheme.dark(
+                    primary: AppTheme.gold,
+                    onPrimary: AppTheme.bg,
+                    surface: AppTheme.surface,
+                    onSurface: AppTheme.textPrimary,
+                  ),
+                  dialogBackgroundColor: AppTheme.surface,
+                ),
+                child: child!,
+              ),
+            );
+            if (picked != null) {
+              _dateCtrl.text =
+                  DateFormat('EEEE, d MMMM yyyy').format(picked);
+            }
+          },
+          child: AbsorbPointer(
+            child: TextFormField(
+              controller: _dateCtrl,
+              readOnly: true,
+              validator: (v) =>
+                  (v == null || v.trim().isEmpty) ? 'form_date_error'.tr() : null,
+              style: GoogleFonts.montserrat(
+                fontSize: 13,
+                color: AppTheme.textPrimary,
+              ),
+              decoration: InputDecoration(
+                hintText: 'form_date_hint'.tr(),
+                suffixIcon: const Icon(
+                  Icons.calendar_today_outlined,
+                  color: AppTheme.gold,
+                  size: 18,
+                ),
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
   Widget _buildDropdown() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'PACKAGE',
+          'form_package'.tr().toUpperCase(),
           style: GoogleFonts.montserrat(
             fontSize: 9,
             fontWeight: FontWeight.w600,
@@ -460,13 +715,13 @@ class _ContactFormState extends State<_ContactForm> {
           ),
           decoration: const InputDecoration(),
           hint: Text(
-            'اختار الباكدج',
+            'form_package_hint'.tr(),
             style: GoogleFonts.montserrat(
               fontSize: 13,
               color: AppTheme.textDim,
             ),
           ),
-          validator: (v) => v == null ? 'اختار الباكدج' : null,
+          validator: (v) => v == null ? 'form_package_error'.tr() : null,
           items: const [
             DropdownMenuItem(
                 value: 'basic',
