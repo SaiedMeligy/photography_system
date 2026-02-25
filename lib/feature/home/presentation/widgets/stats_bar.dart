@@ -9,6 +9,7 @@ class StatsBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    context.locale;
     final stats = [
       ('stat_weddings_value'.tr(), 'stat_weddings'.tr()),
       ('stat_years_value'.tr(),    'stat_years'.tr()),

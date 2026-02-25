@@ -5,7 +5,6 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:easy_localization/easy_localization.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/widgets/section_label.dart';
-
 import '../../../../core/widgets/gold_button.dart';
 
 class TestimonialsPreview extends StatefulWidget {
@@ -16,43 +15,7 @@ class TestimonialsPreview extends StatefulWidget {
 }
 
 class _TestimonialsPreviewState extends State<TestimonialsPreview> {
-  final List<Map<String, String>> _testimonials = [
-    {
-      'name': 'محمد و فاطمة',
-      'event': 'فرح نوفمبر 2024',
-      'text':
-          'ابراهيم مبقاش بس مصور، ده فنان بيحس باللحظة. كل صورة حسينا فيها إحنا تاني مع بعض.',
-      'initials': 'م.ف',
-    },
-    {
-      'name': 'أحمد و نور',
-      'event': 'فرح أكتوبر 2024',
-      'text':
-          'من أول ما دخلنا الكوشة لحد ما طلعنا، كان موجود في كل حتة. الصور جميلة جداً وبتحكي القصة كلها.',
-      'initials': 'أ.ن',
-    },
-    {
-      'name': 'كريم و ياسمين',
-      'event': 'فرح سبتمبر 2024',
-      'text':
-          'الألبوم جه أحسن من أي حاجة تخيلتها! شكراً ابراهيم على كل لحظة حلوة اتسجلت.',
-      'initials': 'ك.ي',
-    },
-    {
-      'name': 'عمر و سارة',
-      'event': 'فرح أغسطس 2024',
-      'text':
-          'التفاصيل الصغيرة اللي بيلتقطها ابراهيم هي الحاجة اللي بتفرقه عن غيره. موهبة حقيقية.',
-      'initials': 'ع.س',
-    },
-    {
-      'name': 'يوسف و منى',
-      'event': 'فرح يوليو 2024',
-      'text':
-          'باكدج الفيديو كان قمة! الريل الجه نزلناه على الانستا وعمل اتفاعل رهيب.',
-      'initials': 'ي.م',
-    },
-  ];
+  final List<Map<String, String>> _addedTestimonials = [];
 
   void _showAddReview() {
     showDialog(
@@ -60,7 +23,7 @@ class _TestimonialsPreviewState extends State<TestimonialsPreview> {
       builder: (ctx) => _AddReviewDialog(
         onAdd: (review) {
           setState(() {
-            _testimonials.insert(0, review);
+            _addedTestimonials.insert(0, review);
           });
         },
       ),
@@ -69,7 +32,43 @@ class _TestimonialsPreviewState extends State<TestimonialsPreview> {
 
   @override
   Widget build(BuildContext context) {
+    context.locale; // Listen for locale changes
     final isMobile = MediaQuery.of(context).size.width < 700;
+
+    final List<Map<String, String>> defaultTestimonials = [
+      {
+        'name': 'محمد وفاطمة',
+        'event': 'فرح نوفمبر 2024',
+        'text': 'ابراهيم مبقاش بس مصور، ده فنان بيحس باللحظة. كل صورة حسينا فيها إحنا تاني مع بعض.',
+        'initials': 'م.ف',
+      },
+      {
+        'name': 'أحمد ونور',
+        'event': 'فرح أكتوبر 2024',
+        'text': 'من أول ما دخلنا الكوشة لحد ما طلعنا، كان موجود في كل حتة. الصور جميلة جداً وبتحكي القصة كلها.',
+        'initials': 'أ.ن',
+      },
+      {
+        'name': 'كريم وياسمين',
+        'event': 'فرح سبتمبر 2024',
+        'text': 'الألبوم جه أحسن من أي حاجة تخيلتها! شكراً ابراهيم على كل لحظة حلوة اتسجلت.',
+        'initials': 'ك.ي',
+      },
+      {
+        'name': 'عمر وسارة',
+        'event': 'فرح أغسطس 2024',
+        'text': 'التفاصيل الصغيرة اللي بيلتقطها ابراهيم هي الحاجة اللي بتفرقه عن غيره. موهبة حقيقية.',
+        'initials': 'ع.س',
+      },
+      {
+        'name': 'يوسف ومنى',
+        'event': 'فرح يوليو 2024',
+        'text': 'باكدج الفيديو كان قمة! الريل الجه نزلناه على الانستا وعمل اتفاعل رهيب.',
+        'initials': 'ي.م',
+      },
+    ];
+
+    final testimonialsList = [..._addedTestimonials, ...defaultTestimonials];
 
     return Container(
       color: AppTheme.bg,
@@ -114,10 +113,9 @@ class _TestimonialsPreviewState extends State<TestimonialsPreview> {
 
           const SizedBox(height: 60),
 
-          // Auto-scrolling testimonials
           SizedBox(
             height: 260,
-            child: _TestimonialsCarousel(testimonials: _testimonials),
+            child: _TestimonialsCarousel(testimonials: testimonialsList),
           ),
 
           const SizedBox(height: 50),
@@ -134,7 +132,6 @@ class _TestimonialsPreviewState extends State<TestimonialsPreview> {
   }
 }
 
-// ─── Add Review Dialog ─────────────────────────────────────────
 class _AddReviewDialog extends StatefulWidget {
   final Function(Map<String, String>) onAdd;
   const _AddReviewDialog({required this.onAdd});
@@ -153,8 +150,8 @@ class _AddReviewDialogState extends State<_AddReviewDialog> {
   Widget build(BuildContext context) {
     return Dialog(
       backgroundColor: AppTheme.surface,
-      shape: RoundedRectangleBorder(
-        side: const BorderSide(color: AppTheme.border),
+      shape: const RoundedRectangleBorder(
+        side: BorderSide(color: AppTheme.border),
         borderRadius: BorderRadius.zero,
       ),
       child: Container(
@@ -258,7 +255,7 @@ class _AddReviewDialogState extends State<_AddReviewDialog> {
           controller: ctrl,
           maxLines: maxLines,
           style: GoogleFonts.montserrat(fontSize: 13, color: AppTheme.textPrimary),
-          validator: (v) => (v == null || v.trim().isEmpty) ? 'Required' : null,
+          validator: (v) => (v == null || v.trim().isEmpty) ? 'form_required'.tr() : null,
           decoration: const InputDecoration(
             contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           ),
@@ -297,8 +294,7 @@ class _TestimonialsCarouselState extends State<_TestimonialsCarousel> {
   @override
   void initState() {
     super.initState();
-    // Timer starts lazily on first access
-    _timer; // ignore: unnecessary_statements
+    _timer; 
   }
 
   @override
@@ -315,7 +311,7 @@ class _TestimonialsCarouselState extends State<_TestimonialsCarousel> {
       onEnter: (_) => setState(() => _hovering = true),
       onExit: (_) => setState(() => _hovering = false),
       child: ListView.separated(
-        key: ValueKey(widget.testimonials.length), // Rebuild when list length changes
+        key: ValueKey(widget.testimonials.length), 
         controller: _ctrl,
         scrollDirection: Axis.horizontal,
         padding: const EdgeInsets.symmetric(horizontal: 40),
@@ -326,7 +322,6 @@ class _TestimonialsCarouselState extends State<_TestimonialsCarousel> {
     );
   }
 }
-
 
 class _TestimonialCard extends StatefulWidget {
   final Map<String, String> data;
@@ -357,7 +352,6 @@ class _TestimonialCardState extends State<_TestimonialCard> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Stars
             Row(
               children: List.generate(
                 5,
@@ -368,7 +362,6 @@ class _TestimonialCardState extends State<_TestimonialCard> {
               ),
             ),
             const SizedBox(height: 16),
-
             Expanded(
               child: Text(
                 '"${widget.data['text']}"',
@@ -380,9 +373,7 @@ class _TestimonialCardState extends State<_TestimonialCard> {
                 ),
               ),
             ),
-
             const SizedBox(height: 20),
-
             Row(
               children: [
                 Container(

@@ -16,6 +16,7 @@ class PortfolioPreview extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    context.locale; // Ensure rebuild on locale change
     return BlocProvider(
       // Only load the first 6 images for the preview
       create: (_) => PortfolioCubit(previewCount: 6),
@@ -31,6 +32,7 @@ class _PortfolioPreviewView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    context.locale;
     final isMobile = MediaQuery.of(context).size.width < 700;
 
     return BlocBuilder<PortfolioCubit, PortfolioState>(

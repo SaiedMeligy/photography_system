@@ -11,6 +11,7 @@ class AboutSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    context.locale;
     final size = MediaQuery.of(context).size;
     final isMobile = size.width < 900;
 
@@ -53,6 +54,7 @@ class AboutSection extends StatelessWidget {
 class _ImagesStack extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    context.locale;
     final isMobile = MediaQuery.of(context).size.width < 900;
     
     return SizedBox(
@@ -164,6 +166,7 @@ class _ImagesStack extends StatelessWidget {
 class _AboutContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    context.locale;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

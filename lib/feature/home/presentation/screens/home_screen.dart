@@ -33,6 +33,7 @@ class _HomeView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    context.locale; // Force rebuild of all slivers on locale change
     return CustomScrollView(
       slivers: [
         SliverToBoxAdapter(

@@ -14,6 +14,7 @@ class ContactSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    context.locale; // Ensure rebuild on locale change
     final isMobile = MediaQuery.of(context).size.width < 900;
 
     return Container(
@@ -39,6 +40,7 @@ class ContactSection extends StatelessWidget {
 class _ContactInfo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    context.locale; // Listen for locale changes
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -441,19 +443,19 @@ class _ContactFormState extends State<_ContactForm> {
 
     // ── بناء الرسالة ─────────────────────────────────────────
     final packageLabel = {
-      'basic': 'Package 1 — Basic (2500 LE)',
-      'half':  'Package 2 — Half Day (3500 LE)',
-      'full':  'Package 3 — Full Day (4000 LE)',
-    }[_selectedPackage] ?? 'لم يتم الاختيار';
+      'basic': '${'nav_packages'.tr()} 1 — ${'pkg_1_name'.tr()} (${'pkg_1_duration'.tr()}) - 2500 LE',
+      'half':  '${'nav_packages'.tr()} 2 — ${'pkg_2_name'.tr()} (${'pkg_2_duration'.tr()}) - 3500 LE',
+      'full':  '${'nav_packages'.tr()} 3 — ${'pkg_3_name'.tr()} (${'pkg_3_duration'.tr()}) - 4000 LE',
+    }[_selectedPackage] ?? '—';
 
     final message = '''
-🌹 *طلب حجز جديد — iBrahiim Photography*
+${'whatsapp_msg_title'.tr()}
 
-👤 *الاسم:* ${_nameCtrl.text.trim()}
-📱 *رقم الهاتف:* ${_phoneCtrl.text.trim()}
-📅 *تاريخ الفرح:* ${_dateCtrl.text.trim()}
-📦 *الباكدج:* $packageLabel
-💬 *رسالة:* ${_messageCtrl.text.trim().isEmpty ? '—' : _messageCtrl.text.trim()}
+${(context.locale.languageCode == 'ar' ? '*الاسم:* ' : '*Name:* ')} ${_nameCtrl.text.trim()}
+${(context.locale.languageCode == 'ar' ? '*رقم الهاتف:* ' : '*Phone:* ')} ${_phoneCtrl.text.trim()}
+${'whatsapp_msg_date'.tr()} ${_dateCtrl.text.trim()}
+${'whatsapp_msg_pkg'.tr()} $packageLabel
+${(context.locale.languageCode == 'ar' ? '*رسالة:* ' : '*Message:* ')} ${_messageCtrl.text.trim().isEmpty ? '—' : _messageCtrl.text.trim()}
     '''.trim();
 
     // ── فتح واتساب ───────────────────────────────────────────
@@ -510,6 +512,7 @@ class _ContactFormState extends State<_ContactForm> {
 
   @override
   Widget build(BuildContext context) {
+    context.locale; // Listen for locale changes
     return Form(
       key: widget.formKey,
       child: Column(
@@ -722,16 +725,16 @@ class _ContactFormState extends State<_ContactForm> {
             ),
           ),
           validator: (v) => v == null ? 'form_package_error'.tr() : null,
-          items: const [
+          items: [
             DropdownMenuItem(
                 value: 'basic',
-                child: Text('Package 1 — Basic (2500 LE)')),
+                child: Text('${'nav_packages'.tr()} 1 — ${'pkg_1_name'.tr()} (2500 LE)')),
             DropdownMenuItem(
                 value: 'half',
-                child: Text('Package 2 — Half Day (3500 LE)')),
+                child: Text('${'nav_packages'.tr()} 2 — ${'pkg_2_name'.tr()} (3500 LE)')),
             DropdownMenuItem(
                 value: 'full',
-                child: Text('Package 3 — Full Day (4000 LE)')),
+                child: Text('${'nav_packages'.tr()} 3 — ${'pkg_3_name'.tr()} (4000 LE)')),
           ],
           onChanged: (v) => setState(() => _selectedPackage = v),
         ),
