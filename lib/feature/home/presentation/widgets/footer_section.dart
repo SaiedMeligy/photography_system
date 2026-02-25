@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../../core/theme/app_theme.dart';
+import '../../../../core/translations/locale_keys.g.dart';
 
 class FooterSection extends StatelessWidget {
   const FooterSection({super.key});
@@ -43,7 +44,7 @@ class FooterSection extends StatelessWidget {
               children: [
                 Expanded(
                   child: Text(
-                    '© ${DateTime.now().year} iBrahiim Photography. ${'footer_rights'.tr()}',
+                    '© ${DateTime.now().year} iBrahiim Photography. ${LocaleKeys.footer_rights.tr()}',
                     textAlign: isMobile ? TextAlign.center : (context.locale.languageCode == 'ar' ? TextAlign.right : TextAlign.left),
                     style: GoogleFonts.montserrat(
                       fontSize: 11,
@@ -53,7 +54,7 @@ class FooterSection extends StatelessWidget {
                 ),
                 if (!isMobile)
                   Text(
-                    'contact_payment_value'.tr(),
+                    LocaleKeys.contact_payment_value.tr(),
                     style: GoogleFonts.montserrat(
                       fontSize: 11,
                       color: AppTheme.textDim,
@@ -98,7 +99,7 @@ class FooterSection extends StatelessWidget {
               ),
               const SizedBox(height: 20),
               Text(
-                'footer_tagline'.tr(),
+                LocaleKeys.footer_tagline.tr(),
                 textAlign: isRtl ? TextAlign.right : TextAlign.left,
                 style: GoogleFonts.montserrat(
                   fontSize: 12,
@@ -116,12 +117,12 @@ class FooterSection extends StatelessWidget {
           child: Column(
             crossAxisAlignment: isRtl ? CrossAxisAlignment.end : CrossAxisAlignment.start,
             children: [
-              _FooterHeading('footer_quick_links'.tr()),
+              _FooterHeading(LocaleKeys.footer_quick_links.tr()),
               const SizedBox(height: 16),
-              _FooterLink('nav_home'.tr(), () => context.go('/')),
-              _FooterLink('nav_portfolio'.tr(), () => context.go('/portfolio')),
-              _FooterLink('nav_packages'.tr(), () => context.go('/packages')),
-              _FooterLink('nav_book'.tr(), () => context.go('/booking')),
+              _FooterLink(LocaleKeys.nav_home.tr(), () => context.go('/')),
+              _FooterLink(LocaleKeys.nav_portfolio.tr(), () => context.go('/portfolio')),
+              _FooterLink(LocaleKeys.nav_packages.tr(), () => context.go('/packages')),
+              _FooterLink(LocaleKeys.nav_book.tr(), () => context.go('/booking')),
             ],
           ),
         ),
@@ -130,13 +131,13 @@ class FooterSection extends StatelessWidget {
           child: Column(
             crossAxisAlignment: isRtl ? CrossAxisAlignment.end : CrossAxisAlignment.start,
             children: [
-              _FooterHeading('footer_contact'.tr()),
+              _FooterHeading(LocaleKeys.footer_contact.tr()),
               const SizedBox(height: 16),
               _ContactLink('📱 01155699971', 'tel:01155699971'),
               _ContactLink('📸 @HEEMA.GAMAL_PH', 'https://www.instagram.com/heema.gamal_ph'),
-              _ContactLink('📍 ${'location_title'.tr()}', 'https://www.google.com/maps/search/?api=1&query=25+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%A7%D9%84%D8%B4%D8%B1%D9%83%D8%A7%D8%AA+%D8%A7%D9%84%D8%B2%D8%A7%D9%88%D9%8A%D8%A9+%D8%A7%D9%84%D8%AD%D9%85%D8%B1%D8%A7%D8%A1+%D8%A7%D9%84%D9%82%D8%A7%D9%87%D8%B1%D8%A9'),
+              _ContactLink('📍 ${LocaleKeys.location_title.tr()}', 'https://www.google.com/maps/search/?api=1&query=25+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%A7%D9%84%D8%B4%D8%B1%D9%83%D8%A7%D8%AA+%D8%A7%D9%84%D8%B2%D8%A7%D9%88%D9%8A%D8%A9+%D8%A7%D9%84%D8%AD%D9%85%D8%B1%D8%A7%D8%A1+%D8%A7%D9%84%D9%82%D8%A7%D9%87%D8%B1%D8%A9'),
               Text(
-                '💳 ${'contact_payment_value'.tr()}',
+                '💳 ${LocaleKeys.contact_payment_value.tr()}',
                 textAlign: isRtl ? TextAlign.right : TextAlign.left,
                 style: GoogleFonts.montserrat(fontSize: 12, color: AppTheme.textDim, height: 2),
               ),
@@ -175,19 +176,19 @@ class FooterSection extends StatelessWidget {
           spacing: 24,
           runSpacing: 8,
           children: [
-            _FooterLink('nav_home'.tr(), () => context.go('/')),
-            _FooterLink('nav_portfolio'.tr(), () => context.go('/portfolio')),
-            _FooterLink('nav_packages'.tr(), () => context.go('/packages')),
-            _FooterLink('nav_book'.tr(), () => context.go('/booking')),
+            _FooterLink(LocaleKeys.nav_home.tr(), () => context.go('/')),
+            _FooterLink(LocaleKeys.nav_portfolio.tr(), () => context.go('/portfolio')),
+            _FooterLink(LocaleKeys.nav_packages.tr(), () => context.go('/packages')),
+            _FooterLink(LocaleKeys.nav_book.tr(), () => context.go('/booking')),
           ],
         ),
         const SizedBox(height: 24),
         _ContactLink('📱 01155699971   •   📸 @HEEMA.GAMAL_PH', 'https://www.instagram.com/heema.gamal_ph'),
         const SizedBox(height: 8),
-        _ContactLink('📍 ${'location_address'.tr()}', 'https://www.google.com/maps/search/?api=1&query=25+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%A7%D9%84%D8%B4%D8%B1%D9%83%D8%A7%D8%AA+%D8%A7%D9%84%D8%B2%D8%A7%D9%88%D9%8A%D8%A9+%D8%A7%D9%84%D8%AD%D9%85%D8%B1%D8%A7%D8%A1+%D8%A7%D9%84%D9%82%D8%A7%D9%87%D8%B1%D8%A9'),
+        _ContactLink('📍 ${LocaleKeys.location_address.tr()}', 'https://www.google.com/maps/search/?api=1&query=25+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%A7%D9%84%D8%B4%D8%B1%D9%83%D8%A7%D8%AA+%D8%A7%D9%84%D8%B2%D8%A7%D9%88%D9%8A%D8%A9+%D8%A7%D9%84%D8%AD%D9%85%D8%B1%D8%A7%D8%A1+%D8%A7%D9%84%D9%82%D8%A7%D9%87%D8%B1%D8%A9'),
         const SizedBox(height: 24),
         Text(
-          '© ${DateTime.now().year} iBrahiim Photography. ${'footer_rights'.tr()}',
+          '© ${DateTime.now().year} iBrahiim Photography. ${LocaleKeys.footer_rights.tr()}',
           textAlign: TextAlign.center,
           style: GoogleFonts.montserrat(
             fontSize: 10,

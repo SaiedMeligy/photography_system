@@ -7,6 +7,7 @@ import '../../../../core/theme/app_theme.dart';
 import '../../../../core/widgets/section_label.dart';
 import '../../../../core/widgets/gold_button.dart';
 import '../../../home/presentation/widgets/footer_section.dart';
+import '../../../../core/translations/locale_keys.g.dart';
 
 class PackagesScreen extends StatelessWidget {
   const PackagesScreen({super.key});
@@ -19,43 +20,43 @@ class PackagesScreen extends StatelessWidget {
     // Package data — strings come from translation keys
     final packages = [
       _Package(
-        tier: 'pkg_1_tier',
-        name: 'pkg_1_name',
-        duration: 'pkg_1_duration',
+        tier: LocaleKeys.pkg_1_tier,
+        name: LocaleKeys.pkg_1_name,
+        duration: LocaleKeys.pkg_1_duration,
         price: '2500',
         features: [
-          'pkg_feat_session',
-          'pkg_feat_album',
-          'pkg_feat_tableau_30_40',
-          'pkg_feat_flash',
+          LocaleKeys.pkg_feat_session,
+          LocaleKeys.pkg_feat_album,
+          LocaleKeys.pkg_feat_tableau_30_40,
+          LocaleKeys.pkg_feat_flash,
         ],
         featured: false,
       ),
       _Package(
-        tier: 'pkg_2_tier',
-        name: 'pkg_2_name',
-        duration: 'pkg_2_duration',
+        tier: LocaleKeys.pkg_2_tier,
+        name: LocaleKeys.pkg_2_name,
+        duration: LocaleKeys.pkg_2_duration,
         price: '3500',
         features: [
-          'pkg_feat_session',
-          'pkg_feat_hall',
-          'pkg_feat_album',
-          'pkg_feat_tableau_40_50',
-          'pkg_feat_flash',
+          LocaleKeys.pkg_feat_session,
+          LocaleKeys.pkg_feat_hall,
+          LocaleKeys.pkg_feat_album,
+          LocaleKeys.pkg_feat_tableau_40_50,
+          LocaleKeys.pkg_feat_flash,
         ],
         featured: true,
       ),
       _Package(
-        tier: 'pkg_3_tier',
-        name: 'pkg_3_name',
-        duration: 'pkg_3_duration',
+        tier: LocaleKeys.pkg_3_tier,
+        name: LocaleKeys.pkg_3_name,
+        duration: LocaleKeys.pkg_3_duration,
         price: '4000',
         features: [
-          'pkg_feat_prep',
-          'pkg_feat_hall',
-          'pkg_feat_album',
-          'pkg_feat_tableau_70_50',
-          'pkg_feat_flash',
+          LocaleKeys.pkg_feat_prep,
+          LocaleKeys.pkg_feat_hall,
+          LocaleKeys.pkg_feat_album,
+          LocaleKeys.pkg_feat_tableau_70_50,
+          LocaleKeys.pkg_feat_flash,
         ],
         featured: false,
       ),
@@ -76,10 +77,10 @@ class PackagesScreen extends StatelessWidget {
             ),
             child: Column(
               children: [
-                SectionLabel(text: 'section_packages'.tr()),
+                SectionLabel(text: LocaleKeys.section_packages.tr()),
                 const SizedBox(height: 24),
                 Text(
-                  'packages_subtitle'.tr(),
+                  LocaleKeys.packages_subtitle.tr(),
                   textAlign: TextAlign.center,
                   style: GoogleFonts.montserrat(
                     fontSize: 13,
@@ -183,10 +184,10 @@ class _PackagesHero extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const SizedBox(height: 90),
-                SectionLabel(text: 'section_packages'.tr()),
+                SectionLabel(text: LocaleKeys.section_packages.tr()),
                 const SizedBox(height: 20),
                 Text(
-                  'packages_title_1'.tr(),
+                  LocaleKeys.packages_title_1.tr(),
                   style: GoogleFonts.cormorantGaramond(
                     fontSize: 62,
                     fontWeight: FontWeight.w300,
@@ -194,7 +195,7 @@ class _PackagesHero extends StatelessWidget {
                   ),
                 ).animate().fadeIn(duration: 800.ms).slideY(begin: 0.2, end: 0),
                 Text(
-                  'packages_title_2'.tr(),
+                  LocaleKeys.packages_title_2.tr(),
                   style: GoogleFonts.cormorantGaramond(
                     fontSize: 36,
                     fontWeight: FontWeight.w300,
@@ -282,7 +283,7 @@ class _PackageCardState extends State<_PackageCard> {
                       horizontal: 12, vertical: 6),
                   color: AppTheme.gold,
                   child: Text(
-                    'package_most_popular'.tr().toUpperCase(),
+                    LocaleKeys.package_most_popular.tr().toUpperCase(),
                     style: GoogleFonts.montserrat(
                       fontSize: 9,
                       fontWeight: FontWeight.w700,
@@ -431,7 +432,7 @@ class _PackageCardState extends State<_PackageCard> {
             // ── CTA
             Builder(
               builder: (ctx) => GoldButton(
-                label: 'package_book_btn'.tr(),
+                label: LocaleKeys.package_book_btn.tr(),
                 onTap: () => ctx.go('/booking'),
                 outline: !featured,
                 icon: Icons.calendar_today_outlined,
@@ -455,25 +456,25 @@ class _ExtrasSection extends StatelessWidget {
   const _ExtrasSection();
 
   static const List<Map<String, String>> _extras = [
-    {'name': 'extra_session_only', 'duration': 'extra_unit_hour', 'price': '1500'},
-    {'name': 'extra_hall_only', 'duration': 'extra_unit_hours', 'price': '1000'},
+    {'name': LocaleKeys.extra_session_only, 'duration': LocaleKeys.extra_unit_hour, 'price': '1500'},
+    {'name': LocaleKeys.extra_hall_only, 'duration': LocaleKeys.extra_unit_hours, 'price': '1000'},
     {
-      'name': 'extra_video_session_prep',
+      'name': LocaleKeys.extra_video_session_prep,
       'duration': '',
       'price': '2000'
     },
     {
-      'name': 'extra_video_session_hall',
-      'duration': 'extra_unit_half_day',
+      'name': LocaleKeys.extra_video_session_hall,
+      'duration': LocaleKeys.extra_unit_half_day,
       'price': '2500'
     },
     {
-      'name': 'extra_video_full_day',
-      'duration': 'extra_unit_full_day',
+      'name': LocaleKeys.extra_video_full_day,
+      'duration': LocaleKeys.extra_unit_full_day,
       'price': '3000'
     },
-    {'name': 'extra_reel_session_prep', 'duration': '', 'price': '1000'},
-    {'name': 'extra_reel_full_day', 'duration': 'extra_unit_full_day', 'price': '1500'},
+    {'name': LocaleKeys.extra_reel_session_prep, 'duration': '', 'price': '1000'},
+    {'name': LocaleKeys.extra_reel_full_day, 'duration': LocaleKeys.extra_unit_full_day, 'price': '1500'},
   ];
 
   @override
@@ -495,7 +496,7 @@ class _ExtrasSection extends StatelessWidget {
             text: TextSpan(
               children: [
                 TextSpan(
-                  text: '${'extras_title_1'.tr()} ',
+                  text: '${LocaleKeys.extras_title_1.tr()} ',
                   style: GoogleFonts.cormorantGaramond(
                     fontSize: 36,
                     fontWeight: FontWeight.w300,
@@ -503,7 +504,7 @@ class _ExtrasSection extends StatelessWidget {
                   ),
                 ),
                 TextSpan(
-                  text: 'extras_title_2'.tr(),
+                  text: LocaleKeys.extras_title_2.tr(),
                   style: GoogleFonts.cormorantGaramond(
                     fontSize: 36,
                     fontWeight: FontWeight.w300,
@@ -516,7 +517,7 @@ class _ExtrasSection extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            'extras_subtitle'.tr(),
+            LocaleKeys.extras_subtitle.tr(),
             textAlign: isRtl ? TextAlign.right : TextAlign.left,
             style: GoogleFonts.montserrat(
               fontSize: 12,
@@ -646,10 +647,10 @@ class _NotesSection extends StatelessWidget {
     final isRtl = context.locale.languageCode == 'ar';
 
     final notes = [
-      'note_delivery'.tr(),
-      'note_cancellation'.tr(),
-      'note_punctuality'.tr(),
-      'note_location_fees'.tr(),
+      LocaleKeys.note_delivery.tr(),
+      LocaleKeys.note_cancellation.tr(),
+      LocaleKeys.note_punctuality.tr(),
+      LocaleKeys.note_location_fees.tr(),
     ];
 
     return Container(
@@ -669,7 +670,7 @@ class _NotesSection extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'important_notes'.tr(),
+            LocaleKeys.important_notes.tr(),
             textAlign: isRtl ? TextAlign.right : TextAlign.left,
             style: GoogleFonts.montserrat(
               fontSize: 10,

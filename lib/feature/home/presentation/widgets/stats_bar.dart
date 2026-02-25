@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:easy_localization/easy_localization.dart';
 import '../../../../core/theme/app_theme.dart';
+import '../../../../core/translations/locale_keys.g.dart';
 
 class StatsBar extends StatelessWidget {
   const StatsBar({super.key});
@@ -11,10 +12,10 @@ class StatsBar extends StatelessWidget {
   Widget build(BuildContext context) {
     context.locale;
     final stats = [
-      ('stat_weddings_value'.tr(), 'stat_weddings'.tr()),
-      ('stat_years_value'.tr(),    'stat_years'.tr()),
-      ('stat_happy_value'.tr(),    'stat_happy'.tr()),
-      ('stat_photos_value'.tr(),   'stat_photos'.tr()),
+      (LocaleKeys.stat_weddings_value.tr(), LocaleKeys.stat_weddings.tr()),
+      (LocaleKeys.stat_years_value.tr(),    LocaleKeys.stat_years.tr()),
+      (LocaleKeys.stat_happy_value.tr(),    LocaleKeys.stat_happy.tr()),
+      (LocaleKeys.stat_photos_value.tr(),   LocaleKeys.stat_photos.tr()),
     ];
     final isMobile = MediaQuery.of(context).size.width < 700;
 

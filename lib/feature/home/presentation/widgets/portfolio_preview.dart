@@ -9,6 +9,7 @@ import '../../../../core/theme/app_theme.dart';
 import '../../../../core/widgets/section_label.dart';
 import '../../../../core/widgets/gold_button.dart';
 import '../../../portfolio/cubit/portfolio_cubit.dart';
+import '../../../../core/translations/locale_keys.g.dart';
 
 class PortfolioPreview extends StatelessWidget {
   final VoidCallback onViewAll;
@@ -50,14 +51,14 @@ class _PortfolioPreviewView extends StatelessWidget {
                   // ── Header
                   Column(
                     children: [
-                      SectionLabel(text: 'section_portfolio'.tr()),
+                      SectionLabel(text: LocaleKeys.section_portfolio.tr()),
                       const SizedBox(height: 20),
                       RichText(
                         textAlign: TextAlign.center,
                         text: TextSpan(
                           children: [
                             TextSpan(
-                              text: '${'portfolio_title_1'.tr()}\n',
+                              text: '${LocaleKeys.portfolio_title_1.tr()}\n',
                               style: GoogleFonts.cormorantGaramond(
                                 fontSize: isMobile ? 36 : 52,
                                 fontWeight: FontWeight.w300,
@@ -66,7 +67,7 @@ class _PortfolioPreviewView extends StatelessWidget {
                               ),
                             ),
                             TextSpan(
-                              text: 'portfolio_title_2'.tr(),
+                              text: LocaleKeys.portfolio_title_2.tr(),
                               style: GoogleFonts.cormorantGaramond(
                                 fontSize: isMobile ? 36 : 52,
                                 fontWeight: FontWeight.w300,
@@ -80,7 +81,7 @@ class _PortfolioPreviewView extends StatelessWidget {
                       ),
                       const SizedBox(height: 16),
                       Text(
-                        'portfolio_subtitle'.tr(),
+                        LocaleKeys.portfolio_subtitle.tr(),
                         style: GoogleFonts.montserrat(
                           fontSize: 13,
                           color: AppTheme.textMuted,
@@ -99,7 +100,7 @@ class _PortfolioPreviewView extends StatelessWidget {
                   const SizedBox(height: 50),
 
                   GoldButton(
-                    label: 'portfolio_btn'.tr(),
+                    label: LocaleKeys.portfolio_btn.tr(),
                     onTap: onViewAll,
                     outline: true,
                     icon: Icons.arrow_forward,

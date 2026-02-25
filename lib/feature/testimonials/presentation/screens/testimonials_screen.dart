@@ -9,6 +9,7 @@ import '../../../../core/widgets/section_label.dart';
 import '../../../../core/widgets/gold_button.dart';
 import '../../cubit/testimonials_cubit.dart';
 import '../../../home/presentation/widgets/footer_section.dart';
+import '../../../../core/translations/locale_keys.g.dart';
 
 class TestimonialsScreen extends StatelessWidget {
   const TestimonialsScreen({super.key});
@@ -56,10 +57,10 @@ class _TestimonialsView extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       const SizedBox(height: 90),
-                      SectionLabel(text: 'testimonials_page_label'.tr()),
+                      SectionLabel(text: LocaleKeys.testimonials_page_label.tr()),
                       const SizedBox(height: 20),
                       Text(
-                        'testimonials_page_title'.tr(),
+                        LocaleKeys.testimonials_page_title.tr(),
                         style: GoogleFonts.cormorantGaramond(
                           fontSize: 62,
                           fontWeight: FontWeight.w300,
@@ -67,7 +68,7 @@ class _TestimonialsView extends StatelessWidget {
                         ),
                       ).animate().fadeIn(duration: 800.ms).slideY(begin: 0.2, end: 0),
                       Text(
-                        'testimonials_page_subtitle'.tr(),
+                        LocaleKeys.testimonials_page_subtitle.tr(),
                         style: GoogleFonts.montserrat(
                           fontSize: 13,
                           color: AppTheme.textMuted,
@@ -89,14 +90,14 @@ class _TestimonialsView extends StatelessWidget {
                   children: [
                     const _RatingSummary(),
                     const SizedBox(height: 80),
-                    SectionLabel(text: 'section_happy_couples'.tr()),
+                    SectionLabel(text: LocaleKeys.section_happy_couples.tr()),
                     const SizedBox(height: 16),
                     RichText(
                       textAlign: TextAlign.center,
                       text: TextSpan(
                         children: [
                           TextSpan(
-                            text: '${'testimonials_title_1'.tr()}\n',
+                            text: '${LocaleKeys.testimonials_title_1.tr()}\n',
                             style: GoogleFonts.cormorantGaramond(
                               fontSize: isMobile ? 36 : 52,
                               fontWeight: FontWeight.w300,
@@ -105,7 +106,7 @@ class _TestimonialsView extends StatelessWidget {
                             ),
                           ),
                           TextSpan(
-                            text: 'testimonials_title_2'.tr(),
+                            text: LocaleKeys.testimonials_title_2.tr(),
                             style: GoogleFonts.cormorantGaramond(
                               fontSize: isMobile ? 36 : 52,
                               fontWeight: FontWeight.w300,
@@ -119,7 +120,7 @@ class _TestimonialsView extends StatelessWidget {
                     ),
                     const SizedBox(height: 40),
                     GoldButton(
-                      label: 'testimonials_form_btn'.tr(),
+                      label: LocaleKeys.testimonials_form_btn.tr(),
                       onTap: () => _showAddReview(context),
                       icon: Icons.rate_review,
                     ),
@@ -191,7 +192,7 @@ class _RatingSummary extends StatelessWidget {
           Expanded(
             child: _RatingStatItem(
               value: '5.0',
-              label: 'stat_avg_rating'.tr(),
+              label: LocaleKeys.stat_avg_rating.tr(),
               isMobile: isMobile,
             ),
           ),
@@ -199,7 +200,7 @@ class _RatingSummary extends StatelessWidget {
           Expanded(
             child: _RatingStatItem(
               value: '200+',
-              label: 'stat_happy'.tr(),
+              label: LocaleKeys.stat_happy.tr(),
               isMobile: isMobile,
             ),
           ),
@@ -207,7 +208,7 @@ class _RatingSummary extends StatelessWidget {
           Expanded(
             child: _RatingStatItem(
               value: '98%',
-              label: 'stat_recommend'.tr(),
+              label: LocaleKeys.stat_recommend.tr(),
               isMobile: isMobile,
             ),
           ),
@@ -303,7 +304,7 @@ class _AddReviewDialogState extends State<_AddReviewDialog> {
       SnackBar(
         backgroundColor: AppTheme.surface,
         content: Text(
-          'testimonial_success'.tr(),
+          LocaleKeys.testimonial_success.tr(),
           style: GoogleFonts.montserrat(color: AppTheme.gold),
         ),
       ),
@@ -333,7 +334,7 @@ class _AddReviewDialogState extends State<_AddReviewDialog> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'testimonial_form_title'.tr(),
+                  LocaleKeys.testimonial_form_title.tr(),
                   textAlign: isRtl ? TextAlign.right : TextAlign.left,
                   style: GoogleFonts.cormorantGaramond(
                     fontSize: isMobile ? 32 : 40,
@@ -343,17 +344,17 @@ class _AddReviewDialogState extends State<_AddReviewDialog> {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  'testimonial_form_subtitle'.tr(),
+                  LocaleKeys.testimonial_form_subtitle.tr(),
                   textAlign: isRtl ? TextAlign.right : TextAlign.left,
                   style: GoogleFonts.montserrat(
                       fontSize: 12, color: AppTheme.textMuted),
                 ),
                 const SizedBox(height: 32),
-                _buildField('testimonial_form_name'.tr(), _nameCtrl, isRtl),
+                _buildField(LocaleKeys.testimonial_form_name.tr(), _nameCtrl, isRtl),
                 const SizedBox(height: 20),
-                _buildField('testimonial_form_event'.tr(), _eventCtrl, isRtl),
+                _buildField(LocaleKeys.testimonial_form_event.tr(), _eventCtrl, isRtl),
                 const SizedBox(height: 20),
-                _buildField('testimonial_form_text'.tr(), _textCtrl, isRtl, maxLines: 4),
+                _buildField(LocaleKeys.testimonial_form_text.tr(), _textCtrl, isRtl, maxLines: 4),
                 const SizedBox(height: 40),
                 Wrap(
                   alignment: WrapAlignment.start,
@@ -373,7 +374,7 @@ class _AddReviewDialogState extends State<_AddReviewDialog> {
                       ),
                     ),
                     GoldButton(
-                      label: 'testimonial_form_submit'.tr(),
+                      label: LocaleKeys.testimonial_form_submit.tr(),
                       onTap: _submit,
                     ),
                   ],
@@ -409,7 +410,7 @@ class _AddReviewDialogState extends State<_AddReviewDialog> {
           style: GoogleFonts.montserrat(
               fontSize: 13, color: AppTheme.textPrimary),
           validator: (v) =>
-              (v == null || v.trim().isEmpty) ? 'form_required'.tr() : null,
+              (v == null || v.trim().isEmpty) ? LocaleKeys.form_required.tr() : null,
           decoration: const InputDecoration(
             contentPadding:
                 EdgeInsets.symmetric(horizontal: 16, vertical: 12),

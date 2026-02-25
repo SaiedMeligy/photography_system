@@ -11,6 +11,7 @@ import '../../../../core/theme/app_theme.dart';
 import '../../../../core/widgets/section_label.dart';
 import '../../cubit/portfolio_cubit.dart';
 import '../../../home/presentation/widgets/footer_section.dart';
+import '../../../../core/translations/locale_keys.g.dart';
 
 // Number of columns in the portfolio grid
 const _kColumns = 3;
@@ -56,31 +57,31 @@ class _PortfolioView extends StatelessWidget {
                     ),
                     child: Column(
                       children: [
-                        SectionLabel(text: 'portfolio_story_label'.tr()),
+                        SectionLabel(text: LocaleKeys.portfolio_story_label.tr()),
                         const SizedBox(height: 16),
                         RichText(
                           textAlign: TextAlign.center,
                           text: TextSpan(
                             children: [
-                              TextSpan(
-                                text: '${'portfolio_story_title_1'.tr()}\n',
-                                style: GoogleFonts.cormorantGaramond(
-                                  fontSize: isMobile ? 36 : 52,
-                                  fontWeight: FontWeight.w300,
-                                  color: AppTheme.textPrimary,
-                                  height: 1.2,
-                                ),
-                              ),
-                              TextSpan(
-                                text: 'portfolio_story_title_2'.tr(),
-                                style: GoogleFonts.cormorantGaramond(
-                                  fontSize: isMobile ? 36 : 52,
-                                  fontWeight: FontWeight.w300,
-                                  fontStyle: FontStyle.italic,
-                                  color: AppTheme.gold,
-                                  height: 1.2,
-                                ),
-                              ),
+                               TextSpan(
+                                 text: '${LocaleKeys.portfolio_story_title_1.tr()}\n',
+                                 style: GoogleFonts.cormorantGaramond(
+                                   fontSize: isMobile ? 36 : 52,
+                                   fontWeight: FontWeight.w300,
+                                   color: AppTheme.textPrimary,
+                                   height: 1.2,
+                                 ),
+                               ),
+                               TextSpan(
+                                 text: LocaleKeys.portfolio_story_title_2.tr(),
+                                 style: GoogleFonts.cormorantGaramond(
+                                   fontSize: isMobile ? 36 : 52,
+                                   fontWeight: FontWeight.w300,
+                                   fontStyle: FontStyle.italic,
+                                   color: AppTheme.gold,
+                                   height: 1.2,
+                                 ),
+                               ),
                             ],
                           ),
                         ),
@@ -163,10 +164,10 @@ class _PortfolioHero extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     const SizedBox(height: 90),
-                    SectionLabel(text: 'portfolio_page_label'.tr()),
+                    SectionLabel(text: LocaleKeys.portfolio_page_label.tr()),
                     const SizedBox(height: 20),
                     Text(
-                      'portfolio_page_title'.tr(),
+                      LocaleKeys.portfolio_page_title.tr(),
                       style: GoogleFonts.cormorantGaramond(
                         fontSize: 72,
                         fontWeight: FontWeight.w300,

@@ -13,6 +13,7 @@ import 'dart:ui' as ui;
 
 import '../../cubit/booking_cubit.dart';
 import '../../../home/presentation/widgets/footer_section.dart';
+import '../../../../core/translations/locale_keys.g.dart';
 
 class BookingScreen extends StatelessWidget {
   const BookingScreen({super.key});
@@ -34,28 +35,28 @@ class _BookingView extends StatelessWidget {
 
   Future<void> _submitBooking(BuildContext context, BookingState state) async {
     if (state.selectedDay == null) {
-      _showSnack(context, 'booking_err_date'.tr(), isError: true);
+      _showSnack(context, LocaleKeys.booking_err_date.tr(), isError: true);
       return;
     }
     if (state.selectedPackage.isEmpty) {
-      _showSnack(context, 'booking_err_pkg'.tr(), isError: true);
+      _showSnack(context, LocaleKeys.booking_err_pkg.tr(), isError: true);
       return;
     }
 
     final packageLabel = {
-      'basic': '${'nav_packages'.tr()} 1 — ${'pkg_1_name'.tr()} (${'pkg_1_duration'.tr()}) - 2500 LE',
-      'half': '${'nav_packages'.tr()} 2 — ${'pkg_2_name'.tr()} (${'pkg_2_duration'.tr()}) - 3500 LE',
-      'full': '${'nav_packages'.tr()} 3 — ${'pkg_3_name'.tr()} (${'pkg_3_duration'.tr()}) - 4000 LE',
+      'basic': '${LocaleKeys.nav_packages.tr()} 1 — ${LocaleKeys.pkg_1_name.tr()} (${LocaleKeys.pkg_1_duration.tr()}) - 2500 LE',
+      'half': '${LocaleKeys.nav_packages.tr()} 2 — ${LocaleKeys.pkg_2_name.tr()} (${LocaleKeys.pkg_2_duration.tr()}) - 3500 LE',
+      'full': '${LocaleKeys.nav_packages.tr()} 3 — ${LocaleKeys.pkg_3_name.tr()} (${LocaleKeys.pkg_3_duration.tr()}) - 4000 LE',
     }[state.selectedPackage] ?? state.selectedPackage;
 
     final dateFormatted =
         DateFormat('EEEE, d MMMM yyyy').format(state.selectedDay!);
 
     final message = '''
-${'whatsapp_msg_title'.tr()}
+${LocaleKeys.whatsapp_msg_title.tr()}
 
-${'whatsapp_msg_date'.tr()} $dateFormatted
-${'whatsapp_msg_pkg'.tr()} $packageLabel
+${LocaleKeys.whatsapp_msg_date.tr()} $dateFormatted
+${LocaleKeys.whatsapp_msg_pkg.tr()} $packageLabel
     '''.trim();
 
     final url =
@@ -64,11 +65,11 @@ ${'whatsapp_msg_pkg'.tr()} $packageLabel
     try {
       await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
       if (context.mounted) {
-        _showSnack(context, 'booking_success'.tr(), isError: false);
+        _showSnack(context, LocaleKeys.booking_success.tr(), isError: false);
       }
     } catch (_) {
       if (context.mounted) {
-        _showSnack(context, 'form_error'.tr(), isError: true);
+        _showSnack(context, LocaleKeys.form_error.tr(), isError: true);
       }
     }
   }
@@ -169,10 +170,10 @@ class _BookingHero extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const SizedBox(height: 90),
-            SectionLabel(text: 'booking_hero_label'.tr()),
+            SectionLabel(text: LocaleKeys.booking_hero_label.tr()),
             const SizedBox(height: 20),
             Text(
-              'booking_hero_title'.tr(),
+              LocaleKeys.booking_hero_title.tr(),
               textAlign: TextAlign.center,
               style: GoogleFonts.cormorantGaramond(
                 fontSize: 62,
@@ -181,7 +182,7 @@ class _BookingHero extends StatelessWidget {
               ),
             ).animate().fadeIn(duration: 800.ms).slideY(begin: 0.2, end: 0),
             Text(
-              'booking_hero_subtitle'.tr(),
+              LocaleKeys.booking_hero_subtitle.tr(),
               textAlign: TextAlign.center,
               style: GoogleFonts.montserrat(
                 fontSize: 13,
@@ -285,13 +286,13 @@ class _CalendarSection extends StatelessWidget {
             runSpacing: 8,
             alignment: isRtl ? WrapAlignment.end : WrapAlignment.start,
             children: [
-              _LegendItem(color: AppTheme.gold, label: 'calendar_available'.tr()),
+              _LegendItem(color: AppTheme.gold, label: LocaleKeys.calendar_available.tr()),
               _LegendItem(
                   color: Colors.redAccent.withOpacity(0.5),
-                  label: 'calendar_booked'.tr()),
+                  label: LocaleKeys.calendar_booked.tr()),
               _LegendItem(
                   color: AppTheme.textDim,
-                  label: 'calendar_unavailable'.tr()),
+                  label: LocaleKeys.calendar_unavailable.tr()),
             ],
           ),
           if (state.selectedDay != null) ...[
@@ -381,7 +382,7 @@ class _BookingForm extends StatelessWidget {
       crossAxisAlignment:  CrossAxisAlignment.start,
       children: [
         Text(
-          'booking_form_title'.tr(),
+          LocaleKeys.booking_form_title.tr(),
           textAlign: isRtl ? TextAlign.right : TextAlign.left,
           style: GoogleFonts.cormorantGaramond(
             fontSize: 38,
@@ -391,7 +392,7 @@ class _BookingForm extends StatelessWidget {
         ),
         const SizedBox(height: 8),
         Text(
-          'booking_form_subtitle'.tr(),
+          LocaleKeys.booking_form_subtitle.tr(),
           textAlign: isRtl ? TextAlign.right : TextAlign.left,
           style: GoogleFonts.montserrat(
               fontSize: 13, color: AppTheme.textMuted, height: 1.6),
@@ -399,7 +400,7 @@ class _BookingForm extends StatelessWidget {
         const SizedBox(height: 36),
 
         // Selected date display
-        _FieldLabel('booking_date_label'.tr(), isRtl),
+        _FieldLabel(LocaleKeys.booking_date_label.tr(), isRtl),
         const SizedBox(height: 8),
         Container(
           padding: const EdgeInsets.all(16),
@@ -416,7 +417,7 @@ class _BookingForm extends StatelessWidget {
               Text(
                 state.selectedDay != null
                     ? DateFormat('EEEE, d MMMM yyyy', context.locale.languageCode).format(state.selectedDay!)
-                    : 'booking_date_hint'.tr(),
+                    : LocaleKeys.booking_date_hint.tr(),
                 style: GoogleFonts.montserrat(
                   fontSize: 13,
                   color: state.selectedDay != null
@@ -430,7 +431,7 @@ class _BookingForm extends StatelessWidget {
         const SizedBox(height: 24),
 
         // Package
-        _FieldLabel('form_package'.tr(), isRtl),
+        _FieldLabel(LocaleKeys.form_package.tr(), isRtl),
         const SizedBox(height: 8),
         Directionality(
           textDirection: isRtl ? ui.TextDirection.rtl : ui.TextDirection.ltr,
@@ -443,7 +444,7 @@ class _BookingForm extends StatelessWidget {
                 fontSize: 13, color: AppTheme.textPrimary),
             decoration: const InputDecoration(),
             hint: Text(
-              'form_package_hint'.tr(),
+              LocaleKeys.form_package_hint.tr(),
               style: GoogleFonts.montserrat(
                   fontSize: 13, color: AppTheme.textDim),
             ),
@@ -452,21 +453,21 @@ class _BookingForm extends StatelessWidget {
                 value: 'basic',
                 alignment: isRtl ? Alignment.centerRight : Alignment.centerLeft,
                 child: Text(
-                    '${'nav_packages'.tr()} 1 — ${'pkg_1_name'.tr()} (${'pkg_1_duration'.tr()}) - 2500 LE',
+                    '${LocaleKeys.nav_packages.tr()} 1 — ${LocaleKeys.pkg_1_name.tr()} (${LocaleKeys.pkg_1_duration.tr()}) - 2500 LE',
                     overflow: TextOverflow.ellipsis),
               ),
               DropdownMenuItem(
                 value: 'half',
                 alignment: isRtl ? Alignment.centerRight : Alignment.centerLeft,
                 child: Text(
-                    '${'nav_packages'.tr()} 2 — ${'pkg_2_name'.tr()} (${'pkg_2_duration'.tr()}) - 3500 LE',
+                    '${LocaleKeys.nav_packages.tr()} 2 — ${LocaleKeys.pkg_2_name.tr()} (${LocaleKeys.pkg_2_duration.tr()}) - 3500 LE',
                     overflow: TextOverflow.ellipsis),
               ),
               DropdownMenuItem(
                 value: 'full',
                 alignment: isRtl ? Alignment.centerRight : Alignment.centerLeft,
                 child: Text(
-                    '${'nav_packages'.tr()} 3 — ${'pkg_3_name'.tr()} (${'pkg_3_duration'.tr()}) - 4000 LE',
+                    '${LocaleKeys.nav_packages.tr()} 3 — ${LocaleKeys.pkg_3_name.tr()} (${LocaleKeys.pkg_3_duration.tr()}) - 4000 LE',
                     overflow: TextOverflow.ellipsis),
               ),
             ],
@@ -479,13 +480,13 @@ class _BookingForm extends StatelessWidget {
         const SizedBox(height: 32),
 
         GoldButton(
-          label: 'booking_confirm_btn'.tr(),
+          label: LocaleKeys.booking_confirm_btn.tr(),
           onTap: onSubmit,
           icon: Icons.calendar_today_outlined,
         ),
         const SizedBox(height: 16),
         Text(
-          'booking_contact_note'.tr(),
+          LocaleKeys.booking_contact_note.tr(),
           textAlign: isRtl ? TextAlign.right : TextAlign.left,
           style: GoogleFonts.montserrat(
               fontSize: 11, color: AppTheme.textDim, height: 1.6),

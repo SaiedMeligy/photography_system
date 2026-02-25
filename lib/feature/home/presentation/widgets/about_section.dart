@@ -5,6 +5,7 @@ import 'package:easy_localization/easy_localization.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/widgets/section_label.dart';
 import '../../../../core/constants/image_assets.dart';
+import '../../../../core/translations/locale_keys.g.dart';
 
 class AboutSection extends StatelessWidget {
   const AboutSection({super.key});
@@ -130,7 +131,7 @@ class _ImagesStack extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      'stat_years_value'.tr(),
+                      LocaleKeys.stat_years_value.tr(),
                       style: GoogleFonts.cormorantGaramond(
                         fontSize: 40,
                         fontWeight: FontWeight.w300,
@@ -140,7 +141,7 @@ class _ImagesStack extends StatelessWidget {
                     ),
                     const SizedBox(height: 2),
                     Text(
-                      'stat_years'.tr().toUpperCase(),
+                      LocaleKeys.stat_years.tr().toUpperCase(),
                       textAlign: TextAlign.center,
                       style: GoogleFonts.montserrat(
                         fontSize: 8,
@@ -170,7 +171,7 @@ class _AboutContent extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SectionLabel(text: 'section_about'.tr()),
+        SectionLabel(text: LocaleKeys.section_about.tr()),
         const SizedBox(height: 20),
         Text(
           'iBrahiim',
@@ -185,7 +186,7 @@ class _AboutContent extends StatelessWidget {
           text: TextSpan(
             children: [
               TextSpan(
-                text: '${'about_title_1'.tr()}\n',
+                text: '${LocaleKeys.about_title_1.tr()}\n',
                 style: GoogleFonts.cormorantGaramond(
                   fontSize: 52,
                   fontWeight: FontWeight.w300,
@@ -194,7 +195,7 @@ class _AboutContent extends StatelessWidget {
                 ),
               ),
               TextSpan(
-                text: 'about_title_2'.tr(),
+                text: LocaleKeys.about_title_2.tr(),
                 style: GoogleFonts.cormorantGaramond(
                   fontSize: 52,
                   fontWeight: FontWeight.w300,
@@ -208,7 +209,7 @@ class _AboutContent extends StatelessWidget {
         ),
         const SizedBox(height: 28),
         Text(
-          'about_p1'.tr(),
+          LocaleKeys.about_p1.tr(),
           style: GoogleFonts.montserrat(
             fontSize: 16,
             color: AppTheme.textMuted,
@@ -218,7 +219,7 @@ class _AboutContent extends StatelessWidget {
         ),
         const SizedBox(height: 16),
         Text(
-          'about_p2'.tr(),
+          LocaleKeys.about_p2.tr(),
           style: GoogleFonts.montserrat(
             fontSize: 16,
             color: AppTheme.textMuted,
@@ -236,7 +237,7 @@ class _AboutContent extends StatelessWidget {
             color: AppTheme.goldDim,
           ),
           child: Text(
-            '"${'footer_tagline'.tr()}"',
+            '"${LocaleKeys.footer_tagline.tr()}"',
             style: GoogleFonts.cormorantGaramond(
               fontSize: 22,
               fontStyle: FontStyle.italic,
@@ -250,8 +251,8 @@ class _AboutContent extends StatelessWidget {
           spacing: 40,
           runSpacing: 20,
           children: [
-            _Stat('01155699971', 'contact_phone_label'.tr()),
-            _Stat('@HEEMA.GAMAL_PH', 'contact_social_label'.tr()),
+            _Stat('01155699971', LocaleKeys.contact_phone_label.tr()),
+            _Stat('@HEEMA.GAMAL_PH', LocaleKeys.contact_social_label.tr()),
           ],
         ),
       ],

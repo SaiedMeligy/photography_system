@@ -15,6 +15,7 @@ import '../widgets/portfolio_preview.dart';
 import '../widgets/testimonials_preview.dart';
 import '../widgets/contact_section.dart';
 import '../widgets/footer_section.dart';
+import '../../../../core/translations/locale_keys.g.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -170,7 +171,7 @@ class _HeroSectionState extends State<_HeroSection> {
                         Container(width: 60, height: 1, color: AppTheme.gold),
                         const SizedBox(width: 14),
                         Text(
-                          'hero_eyebrow'.tr(),
+                          LocaleKeys.hero_eyebrow.tr(),
                           style: GoogleFonts.montserrat(
                             fontSize: 10,
                             fontWeight: FontWeight.w600,
@@ -190,7 +191,7 @@ class _HeroSectionState extends State<_HeroSection> {
                       text: TextSpan(
                         children: [
                           TextSpan(
-                            text: '${'hero_title_1'.tr()}\n',
+                            text: '${LocaleKeys.hero_title_1.tr()}\n',
                             style: GoogleFonts.cormorantGaramond(
                               fontSize: isMobile ? 66 : 96,
                               fontWeight: FontWeight.w300,
@@ -199,7 +200,7 @@ class _HeroSectionState extends State<_HeroSection> {
                             ),
                           ),
                           TextSpan(
-                            text: '${'hero_title_2'.tr()}\n',
+                            text: '${LocaleKeys.hero_title_2.tr()}\n',
                             style: GoogleFonts.cormorantGaramond(
                               fontSize: isMobile ? 66 : 96,
                               fontWeight: FontWeight.w300,
@@ -209,7 +210,7 @@ class _HeroSectionState extends State<_HeroSection> {
                             ),
                           ),
                           TextSpan(
-                            text: 'hero_title_3'.tr(),
+                            text: LocaleKeys.hero_title_3.tr(),
                             style: GoogleFonts.cormorantGaramond(
                               fontSize: isMobile ? 66 : 96,
                               fontWeight: FontWeight.w300,
@@ -227,7 +228,7 @@ class _HeroSectionState extends State<_HeroSection> {
 
                     // Description
                     Text(
-                      'hero_desc'.tr(),
+                      LocaleKeys.hero_desc.tr(),
                       style: GoogleFonts.montserrat(
                         fontSize: 17,
                         fontWeight: FontWeight.w300,
@@ -246,12 +247,12 @@ class _HeroSectionState extends State<_HeroSection> {
                       runSpacing: 12,
                       children: [
                         GoldButton(
-                          label: 'hero_btn_book'.tr(),
+                          label: LocaleKeys.hero_btn_book.tr(),
                           onTap: widget.onBookTap,
                           icon: Icons.calendar_today_outlined,
                         ),
                         GoldButton(
-                          label: 'hero_btn_portfolio'.tr(),
+                          label: LocaleKeys.hero_btn_portfolio.tr(),
                           onTap: widget.onPortfolioTap,
                           outline: true,
                           icon: Icons.photo_library_outlined,

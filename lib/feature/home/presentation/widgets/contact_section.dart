@@ -6,6 +6,7 @@ import 'package:easy_localization/easy_localization.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/widgets/section_label.dart';
 import '../../../../core/widgets/gold_button.dart';
+import '../../../../core/translations/locale_keys.g.dart';
 
 class ContactSection extends StatelessWidget {
   ContactSection({super.key});
@@ -44,13 +45,13 @@ class _ContactInfo extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SectionLabel(text: 'section_contact'.tr()),
+        SectionLabel(text: LocaleKeys.section_contact.tr()),
         const SizedBox(height: 20),
         RichText(
           text: TextSpan(
             children: [
               TextSpan(
-                text: '${'contact_title_1'.tr()}\n',
+                text: '${LocaleKeys.contact_title_1.tr()}\n',
                 style: GoogleFonts.cormorantGaramond(
                   fontSize: 42,
                   fontWeight: FontWeight.w300,
@@ -59,7 +60,7 @@ class _ContactInfo extends StatelessWidget {
                 ),
               ),
               TextSpan(
-                text: 'contact_title_2'.tr(),
+                text: LocaleKeys.contact_title_2.tr(),
                 style: GoogleFonts.cormorantGaramond(
                   fontSize: 42,
                   fontWeight: FontWeight.w300,
@@ -74,14 +75,14 @@ class _ContactInfo extends StatelessWidget {
         const SizedBox(height: 40),
         _ContactItem(
           icon: Icons.phone_outlined,
-          label: 'contact_phone_label'.tr(),
+          label: LocaleKeys.contact_phone_label.tr(),
           value: '01155699971',
           onTap: () => launchUrl(Uri.parse('tel:01155699971')),
         ),
         const SizedBox(height: 24),
         _ContactItem(
           icon: Icons.camera_alt_outlined,
-          label: 'contact_social_label'.tr(),
+          label: LocaleKeys.contact_social_label.tr(),
           value: '@HEEMA.GAMAL_PH',
           onTap: () => launchUrl(
             Uri.parse('https://www.instagram.com/heema.gamal_ph?igsh=eXhtZmI2a3Z3ODY4&utm_source=qr'),
@@ -90,8 +91,8 @@ class _ContactInfo extends StatelessWidget {
         const SizedBox(height: 24),
         // _ContactItem(
         //   icon: Icons.payment_outlined,
-        //   label: 'contact_payment_label'.tr(),
-        //   value: 'contact_payment_value'.tr(),
+        //   label: LocaleKeys.contact_payment_label.tr(),
+        //   value: LocaleKeys.contact_payment_value.tr(),
         //   onTap: null,
         // ),
         // const SizedBox(height: 32),
@@ -205,7 +206,7 @@ class _MapCardState extends State<_MapCard> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'location_title'.tr().toUpperCase(),
+                          LocaleKeys.location_title.tr().toUpperCase(),
                           style: GoogleFonts.montserrat(
                             fontSize: 9,
                             fontWeight: FontWeight.w700,
@@ -215,7 +216,7 @@ class _MapCardState extends State<_MapCard> {
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          'location_address'.tr(),
+                          LocaleKeys.location_address.tr(),
                           style: GoogleFonts.montserrat(
                             fontSize: 12,
                             color: AppTheme.textMuted,
@@ -282,8 +283,8 @@ class _MapCardState extends State<_MapCard> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  Text(
-                    'location_open_maps'.tr(),
+                   Text(
+                    LocaleKeys.location_open_maps.tr(),
                     style: GoogleFonts.montserrat(
                       fontSize: 11,
                       fontWeight: FontWeight.w600,
@@ -443,18 +444,18 @@ class _ContactFormState extends State<_ContactForm> {
 
     // ── بناء الرسالة ─────────────────────────────────────────
     final packageLabel = {
-      'basic': '${'nav_packages'.tr()} 1 — ${'pkg_1_name'.tr()} (${'pkg_1_duration'.tr()}) - 2500 LE',
-      'half':  '${'nav_packages'.tr()} 2 — ${'pkg_2_name'.tr()} (${'pkg_2_duration'.tr()}) - 3500 LE',
-      'full':  '${'nav_packages'.tr()} 3 — ${'pkg_3_name'.tr()} (${'pkg_3_duration'.tr()}) - 4000 LE',
+      'basic': '${LocaleKeys.nav_packages.tr()} 1 — ${LocaleKeys.pkg_1_name.tr()} (${LocaleKeys.pkg_1_duration.tr()}) - 2500 LE',
+      'half':  '${LocaleKeys.nav_packages.tr()} 2 — ${LocaleKeys.pkg_2_name.tr()} (${LocaleKeys.pkg_2_duration.tr()}) - 3500 LE',
+      'full':  '${LocaleKeys.nav_packages.tr()} 3 — ${LocaleKeys.pkg_3_name.tr()} (${LocaleKeys.pkg_3_duration.tr()}) - 4000 LE',
     }[_selectedPackage] ?? '—';
 
     final message = '''
-${'whatsapp_msg_title'.tr()}
+${LocaleKeys.whatsapp_msg_title.tr()}
 
 ${(context.locale.languageCode == 'ar' ? '*الاسم:* ' : '*Name:* ')} ${_nameCtrl.text.trim()}
 ${(context.locale.languageCode == 'ar' ? '*رقم الهاتف:* ' : '*Phone:* ')} ${_phoneCtrl.text.trim()}
-${'whatsapp_msg_date'.tr()} ${_dateCtrl.text.trim()}
-${'whatsapp_msg_pkg'.tr()} $packageLabel
+${LocaleKeys.whatsapp_msg_date.tr()} ${_dateCtrl.text.trim()}
+${LocaleKeys.whatsapp_msg_pkg.tr()} $packageLabel
 ${(context.locale.languageCode == 'ar' ? '*رسالة:* ' : '*Message:* ')} ${_messageCtrl.text.trim().isEmpty ? '—' : _messageCtrl.text.trim()}
     '''.trim();
 
@@ -485,7 +486,7 @@ ${(context.locale.languageCode == 'ar' ? '*رسالة:* ' : '*Message:* ')} ${_m
                     color: AppTheme.gold, size: 20),
                 const SizedBox(width: 12),
                 Text(
-                  'form_success'.tr(),
+                  LocaleKeys.form_success.tr(),
                   style: GoogleFonts.montserrat(color: AppTheme.gold),
                 ),
               ],
@@ -499,7 +500,7 @@ ${(context.locale.languageCode == 'ar' ? '*رسالة:* ' : '*Message:* ')} ${_m
           SnackBar(
             backgroundColor: AppTheme.surface,
             content: Text(
-              'form_error'.tr(),
+              LocaleKeys.form_error.tr(),
               style: GoogleFonts.montserrat(color: Colors.redAccent),
             ),
           ),
@@ -520,7 +521,7 @@ ${(context.locale.languageCode == 'ar' ? '*رسالة:* ' : '*Message:* ')} ${_m
         children: [
           // ── العنوان ─────────────────────────────────────────
           Text(
-            'form_title'.tr(),
+            LocaleKeys.form_title.tr(),
             style: GoogleFonts.cormorantGaramond(
               fontSize: 32,
               fontWeight: FontWeight.w300,
@@ -533,7 +534,7 @@ ${(context.locale.languageCode == 'ar' ? '*رسالة:* ' : '*Message:* ')} ${_m
               const Icon(Icons.chat_outlined, color: Color(0xFF25D366), size: 18),
               const SizedBox(width: 8),
               Text(
-                'form_hint'.tr(),
+                LocaleKeys.form_hint.tr(),
                 style: GoogleFonts.montserrat(
                   fontSize: 13,
                   color: AppTheme.textMuted,
@@ -547,20 +548,20 @@ ${(context.locale.languageCode == 'ar' ? '*رسالة:* ' : '*Message:* ')} ${_m
           Row(
             children: [
               Expanded(child: _buildField(
-                label: 'form_name'.tr(),
-                hint: 'form_name_hint'.tr(),
+                label: LocaleKeys.form_name.tr(),
+                hint: LocaleKeys.form_name_hint.tr(),
                 controller: _nameCtrl,
                 validator: (v) => (v == null || v.trim().isEmpty)
-                    ? 'form_name_error'.tr() : null,
+                    ? LocaleKeys.form_name_error.tr() : null,
               )),
               const SizedBox(width: 20),
               Expanded(child: _buildField(
-                label: 'form_phone'.tr(),
+                label: LocaleKeys.form_phone.tr(),
                 hint: '01xxxxxxxxx',
                 controller: _phoneCtrl,
                 keyboardType: TextInputType.phone,
                 validator: (v) => (v == null || v.trim().length < 10)
-                    ? 'form_phone_error'.tr() : null,
+                    ? LocaleKeys.form_phone_error.tr() : null,
               )),
             ],
           ),
@@ -576,8 +577,8 @@ ${(context.locale.languageCode == 'ar' ? '*رسالة:* ' : '*Message:* ')} ${_m
 
           // ── رسالة إضافية ─────────────────────────────────────
           _buildField(
-            label: 'form_message'.tr(),
-            hint: 'form_message_hint'.tr(),
+            label: LocaleKeys.form_message.tr(),
+            hint: LocaleKeys.form_message_hint.tr(),
             controller: _messageCtrl,
             multiline: true,
           ),
@@ -585,7 +586,7 @@ ${(context.locale.languageCode == 'ar' ? '*رسالة:* ' : '*Message:* ')} ${_m
 
           // ── زرار الإرسال ─────────────────────────────────────
           GoldButton(
-            label: _sending ? 'form_sending'.tr() : 'form_send_btn'.tr(),
+            label: _sending ? LocaleKeys.form_sending.tr() : LocaleKeys.form_send_btn.tr(),
             onTap: _sending ? null : _sendWhatsApp,
             icon: Icons.chat_outlined,
           ),
@@ -636,7 +637,7 @@ ${(context.locale.languageCode == 'ar' ? '*رسالة:* ' : '*Message:* ')} ${_m
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'form_date'.tr().toUpperCase(),
+          LocaleKeys.form_date.tr().toUpperCase(),
           style: GoogleFonts.montserrat(
             fontSize: 9,
             fontWeight: FontWeight.w600,
@@ -675,13 +676,13 @@ ${(context.locale.languageCode == 'ar' ? '*رسالة:* ' : '*Message:* ')} ${_m
               controller: _dateCtrl,
               readOnly: true,
               validator: (v) =>
-                  (v == null || v.trim().isEmpty) ? 'form_date_error'.tr() : null,
+                  (v == null || v.trim().isEmpty) ? LocaleKeys.form_date_error.tr() : null,
               style: GoogleFonts.montserrat(
                 fontSize: 13,
                 color: AppTheme.textPrimary,
               ),
               decoration: InputDecoration(
-                hintText: 'form_date_hint'.tr(),
+                hintText: LocaleKeys.form_date_hint.tr(),
                 suffixIcon: const Icon(
                   Icons.calendar_today_outlined,
                   color: AppTheme.gold,
@@ -700,7 +701,7 @@ ${(context.locale.languageCode == 'ar' ? '*رسالة:* ' : '*Message:* ')} ${_m
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'form_package'.tr().toUpperCase(),
+          LocaleKeys.form_package.tr().toUpperCase(),
           style: GoogleFonts.montserrat(
             fontSize: 9,
             fontWeight: FontWeight.w600,
@@ -718,23 +719,23 @@ ${(context.locale.languageCode == 'ar' ? '*رسالة:* ' : '*Message:* ')} ${_m
           ),
           decoration: const InputDecoration(),
           hint: Text(
-            'form_package_hint'.tr(),
+            LocaleKeys.form_package_hint.tr(),
             style: GoogleFonts.montserrat(
               fontSize: 13,
               color: AppTheme.textDim,
             ),
           ),
-          validator: (v) => v == null ? 'form_package_error'.tr() : null,
+          validator: (v) => v == null ? LocaleKeys.form_package_error.tr() : null,
           items: [
             DropdownMenuItem(
                 value: 'basic',
-                child: Text('${'nav_packages'.tr()} 1 — ${'pkg_1_name'.tr()} (2500 LE)')),
+                child: Text('${LocaleKeys.nav_packages.tr()} 1 — ${LocaleKeys.pkg_1_name.tr()} (2500 LE)')),
             DropdownMenuItem(
                 value: 'half',
-                child: Text('${'nav_packages'.tr()} 2 — ${'pkg_2_name'.tr()} (3500 LE)')),
+                child: Text('${LocaleKeys.nav_packages.tr()} 2 — ${LocaleKeys.pkg_2_name.tr()} (3500 LE)')),
             DropdownMenuItem(
                 value: 'full',
-                child: Text('${'nav_packages'.tr()} 3 — ${'pkg_3_name'.tr()} (4000 LE)')),
+                child: Text('${LocaleKeys.nav_packages.tr()} 3 — ${LocaleKeys.pkg_3_name.tr()} (4000 LE)')),
           ],
           onChanged: (v) => setState(() => _selectedPackage = v),
         ),

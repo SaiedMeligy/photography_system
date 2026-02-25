@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:easy_localization/easy_localization.dart';
 import '../../../../core/theme/app_theme.dart';
+import '../../../../core/translations/locale_keys.g.dart';
 
 class AppShell extends StatefulWidget {
   final Widget child;
@@ -18,11 +19,11 @@ class _AppShellState extends State<AppShell> {
 
   // Nav items use translation keys
   static const _navItems = [
-    _NavItem(labelKey: 'nav_home',         path: '/'),
-    _NavItem(labelKey: 'nav_portfolio',    path: '/portfolio'),
-    _NavItem(labelKey: 'nav_packages',     path: '/packages'),
-    _NavItem(labelKey: 'nav_book',         path: '/booking'),
-    _NavItem(labelKey: 'nav_testimonials', path: '/testimonials'),
+    _NavItem(labelKey: LocaleKeys.nav_home,         path: '/'),
+    _NavItem(labelKey: LocaleKeys.nav_portfolio,    path: '/portfolio'),
+    _NavItem(labelKey: LocaleKeys.nav_packages,     path: '/packages'),
+    _NavItem(labelKey: LocaleKeys.nav_book,         path: '/booking'),
+    _NavItem(labelKey: LocaleKeys.nav_testimonials, path: '/testimonials'),
   ];
 
   void _onScroll(double offset) {
@@ -228,7 +229,7 @@ class _LangToggleState extends State<_LangToggle> {
             ),
           ),
           child: Text(
-            widget.isAr ? 'EN' : 'عر',
+            widget.isAr ? 'EN' : 'AR',
             style: GoogleFonts.montserrat(
               fontSize: 11,
               fontWeight: FontWeight.w700,
@@ -368,7 +369,7 @@ class _BookNowBtnState extends State<_BookNowBtn> {
             border: Border.all(color: AppTheme.gold),
           ),
           child: Text(
-            'nav_book'.tr().toUpperCase(),
+            LocaleKeys.nav_book.tr().toUpperCase(),
             style: GoogleFonts.montserrat(
               fontSize: 11,
               fontWeight: FontWeight.w700,

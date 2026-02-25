@@ -32,10 +32,9 @@ class PhotographyApp extends StatelessWidget {
           theme: AppTheme.lightTheme,
           darkTheme: AppTheme.darkTheme,
           routerConfig: AppRouter.router,
-          // easy_localization — use EasyLocalization.of() instead of context extensions
-          locale: EasyLocalization.of(context)!.locale,
-          supportedLocales: EasyLocalization.of(context)!.supportedLocales,
-          localizationsDelegates: EasyLocalization.of(context)!.delegates,
+          locale: context.locale,
+          supportedLocales: context.supportedLocales,
+          localizationsDelegates: context.localizationDelegates,
         );
       },
     );

@@ -6,6 +6,7 @@ import 'package:easy_localization/easy_localization.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/widgets/section_label.dart';
 import '../../../../core/widgets/gold_button.dart';
+import '../../../../core/translations/locale_keys.g.dart';
 
 class TestimonialsPreview extends StatefulWidget {
   const TestimonialsPreview({super.key});
@@ -79,14 +80,14 @@ class _TestimonialsPreviewState extends State<TestimonialsPreview> {
             padding: EdgeInsets.symmetric(horizontal: isMobile ? 24 : 80),
             child: Column(
               children: [
-                SectionLabel(text: 'section_testimonials'.tr()),
+                SectionLabel(text: LocaleKeys.section_testimonials.tr()),
                 const SizedBox(height: 20),
                 RichText(
                   textAlign: TextAlign.center,
                   text: TextSpan(
                     children: [
                       TextSpan(
-                        text: '${'testimonials_title_1'.tr()}\n',
+                        text: '${LocaleKeys.testimonials_title_1.tr()}\n',
                         style: GoogleFonts.cormorantGaramond(
                           fontSize: isMobile ? 36 : 52,
                           fontWeight: FontWeight.w300,
@@ -95,7 +96,7 @@ class _TestimonialsPreviewState extends State<TestimonialsPreview> {
                         ),
                       ),
                       TextSpan(
-                        text: 'testimonials_title_2'.tr(),
+                        text: LocaleKeys.testimonials_title_2.tr(),
                         style: GoogleFonts.cormorantGaramond(
                           fontSize: isMobile ? 36 : 52,
                           fontWeight: FontWeight.w300,
@@ -121,7 +122,7 @@ class _TestimonialsPreviewState extends State<TestimonialsPreview> {
           const SizedBox(height: 50),
 
           GoldButton(
-            label: 'testimonials_form_btn'.tr(),
+            label: LocaleKeys.testimonials_form_btn.tr(),
             onTap: _showAddReview,
             outline: true,
             icon: Icons.rate_review_outlined,
@@ -164,7 +165,7 @@ class _AddReviewDialogState extends State<_AddReviewDialog> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'testimonial_form_title'.tr(),
+                LocaleKeys.testimonial_form_title.tr(),
                 style: GoogleFonts.cormorantGaramond(
                   fontSize: 32,
                   fontWeight: FontWeight.w300,
@@ -173,18 +174,18 @@ class _AddReviewDialogState extends State<_AddReviewDialog> {
               ),
               const SizedBox(height: 8),
               Text(
-                'testimonial_form_subtitle'.tr(),
+                LocaleKeys.testimonial_form_subtitle.tr(),
                 style: GoogleFonts.montserrat(
                   fontSize: 12,
                   color: AppTheme.textMuted,
                 ),
               ),
               const SizedBox(height: 32),
-              _buildField('testimonial_form_name'.tr(), _nameCtrl),
+              _buildField(LocaleKeys.testimonial_form_name.tr(), _nameCtrl),
               const SizedBox(height: 20),
-              _buildField('testimonial_form_event'.tr(), _eventCtrl),
+              _buildField(LocaleKeys.testimonial_form_event.tr(), _eventCtrl),
               const SizedBox(height: 20),
-              _buildField('testimonial_form_text'.tr(), _textCtrl, maxLines: 4),
+              _buildField(LocaleKeys.testimonial_form_text.tr(), _textCtrl, maxLines: 4),
               const SizedBox(height: 40),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
@@ -202,7 +203,7 @@ class _AddReviewDialogState extends State<_AddReviewDialog> {
                   ),
                   const SizedBox(width: 20),
                   GoldButton(
-                    label: 'testimonial_form_submit'.tr(),
+                    label: LocaleKeys.testimonial_form_submit.tr(),
                     onTap: () {
                       if (_formKey.currentState!.validate()) {
                         final initials = _nameCtrl.text.trim().split(' ')
@@ -220,7 +221,7 @@ class _AddReviewDialogState extends State<_AddReviewDialog> {
                           SnackBar(
                             backgroundColor: AppTheme.surface,
                             content: Text(
-                              'testimonial_success'.tr(),
+                              LocaleKeys.testimonial_success.tr(),
                               style: GoogleFonts.montserrat(color: AppTheme.gold),
                             ),
                           ),
@@ -255,7 +256,7 @@ class _AddReviewDialogState extends State<_AddReviewDialog> {
           controller: ctrl,
           maxLines: maxLines,
           style: GoogleFonts.montserrat(fontSize: 13, color: AppTheme.textPrimary),
-          validator: (v) => (v == null || v.trim().isEmpty) ? 'form_required'.tr() : null,
+          validator: (v) => (v == null || v.trim().isEmpty) ? LocaleKeys.form_required.tr() : null,
           decoration: const InputDecoration(
             contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           ),
