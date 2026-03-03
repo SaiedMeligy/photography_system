@@ -96,10 +96,10 @@ class _PortfolioView extends StatelessWidget {
                   ),
                   sliver: state.isLoaded
                       ? _PortfolioSliverGrid(images: state.images)
-                      : const SliverToBoxAdapter(
+                      : SliverToBoxAdapter(
                           child: Center(
                             child: Padding(
-                              padding: EdgeInsets.all(80),
+                              padding: const EdgeInsets.all(80),
                               child: CircularProgressIndicator(
                                 color: AppTheme.gold,
                                 strokeWidth: 1,
@@ -287,7 +287,7 @@ class _GridItemState extends State<_GridItem> {
                 AnimatedOpacity(
                   opacity: _hover ? 1.0 : 0.0,
                   duration: const Duration(milliseconds: 300),
-                  child: const ColoredBox(
+                  child: ColoredBox(
                     color: Colors.black54,
                     child: Center(
                       child: DecoratedBox(

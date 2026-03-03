@@ -7,6 +7,8 @@ import '../../../../core/theme/app_theme.dart';
 import '../../../../core/widgets/section_label.dart';
 import '../../../../core/widgets/gold_button.dart';
 import '../../../../core/translations/locale_keys.g.dart';
+import 'package:photgraphy_system/admin/core/services/admin_data_service.dart';
+import 'package:photgraphy_system/admin/core/models/site_settings.dart';
 
 class ContactSection extends StatelessWidget {
   ContactSection({super.key});
@@ -42,6 +44,7 @@ class _ContactInfo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     context.locale; // Listen for locale changes
+    final settings = AdminDataService.getSiteSettings() ?? SiteSettings();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -73,22 +76,26 @@ class _ContactInfo extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 40),
-        _ContactItem(
-          icon: Icons.phone_outlined,
-          label: LocaleKeys.contact_phone_label.tr(),
-          value: '01155699971',
-          onTap: () => launchUrl(Uri.parse('tel:01155699971')),
-        ),
-        const SizedBox(height: 24),
-        _ContactItem(
-          icon: Icons.camera_alt_outlined,
-          label: LocaleKeys.contact_social_label.tr(),
-          value: '@HEEMA.GAMAL_PH',
-          onTap: () => launchUrl(
-            Uri.parse('https://www.instagram.com/heema.gamal_ph?igsh=eXhtZmI2a3Z3ODY4&utm_source=qr'),
+        if (settings.whatsappNumber.isNotEmpty)
+          _ContactItem(
+            icon: Icons.phone_outlined,
+            label: LocaleKeys.contact_phone_label.tr(),
+            value: settings.whatsappNumber,
+            onTap: () => launchUrl(Uri.parse('tel:${settings.whatsappNumber}')),
           ),
-        ),
-        const SizedBox(height: 24),
+        if (settings.whatsappNumber.isNotEmpty)
+          const SizedBox(height: 24),
+        if (settings.instagramHandle.isNotEmpty)
+          _ContactItem(
+            icon: Icons.camera_alt_outlined,
+            label: LocaleKeys.contact_social_label.tr(),
+            value: settings.instagramHandle,
+            onTap: () => launchUrl(
+              Uri.parse(settings.instagramUrl.isNotEmpty ? settings.instagramUrl : 'https://www.instagram.com/${settings.instagramHandle.replaceAll('@', '')}'),
+            ),
+          ),
+        if (settings.instagramHandle.isNotEmpty)
+          const SizedBox(height: 24),
         // _ContactItem(
         //   icon: Icons.payment_outlined,
         //   label: LocaleKeys.contact_payment_label.tr(),
@@ -104,13 +111,16 @@ class _ContactInfo extends StatelessWidget {
         // Social links
         Row(
           children: [
-            _SocialBtn(icon: Icons.camera_alt, onTap: () => launchUrl(
-              Uri.parse('https://www.instagram.com/heema.gamal_ph?igsh=eXhtZmI2a3Z3ODY4&utm_source=qr'),
-            )),
-            const SizedBox(width: 12),
-            _SocialBtn(icon: Icons.facebook, onTap: () => launchUrl(
-              Uri.parse('https://www.facebook.com/share/1Awgm5KaaY/?mibextid=wwXIfr'),
-            )),
+            if (settings.instagramHandle.isNotEmpty)
+              _SocialBtn(icon: Icons.camera_alt, onTap: () => launchUrl(
+                Uri.parse(settings.instagramUrl.isNotEmpty ? settings.instagramUrl : 'https://www.instagram.com/${settings.instagramHandle.replaceAll('@', '')}'),
+              )),
+            if (settings.instagramHandle.isNotEmpty)
+              const SizedBox(width: 12),
+            if (settings.facebookUrl.isNotEmpty)
+              _SocialBtn(icon: Icons.facebook, onTap: () => launchUrl(
+                Uri.parse(settings.facebookUrl),
+              )),
           ],
         ),
       ],
@@ -127,8 +137,8 @@ class _MapCard extends StatefulWidget {
 class _MapCardState extends State<_MapCard> {
   bool _hover = false;
 
-  static const _locationQuery = '25 شارع الشركات الزاوية الحمراء القاهرة';
-  static const _webMapsUrl = 'https://www.google.com/maps/search/?api=1&query=25+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%A7%D9%84%D8%B4%D8%B1%D9%83%D8%A7%D8%AA+%D8%A7%D9%84%D8%B2%D8%A7%D9%88%D9%8A%D8%A9+%D8%A7%D9%84%D8%AD%D9%85%D8%B1%D8%A7%D8%A1+%D8%A7%D9%84%D9%82%D8%A7%D9%87%D8%B1%D8%A9';
+  String get _locationQuery => (AdminDataService.getSiteSettings() ?? SiteSettings()).locationAddress;
+  String get _webMapsUrl => (AdminDataService.getSiteSettings() ?? SiteSettings()).locationMapsUrl;
 
   Future<void> _openMaps() async {
     final geoUri = Uri.parse('geo:0,0?q=$_locationQuery');
@@ -194,7 +204,7 @@ class _MapCardState extends State<_MapCard> {
                       color: AppTheme.goldDim,
                       border: Border.all(color: AppTheme.gold),
                     ),
-                    child: const Icon(
+                    child: Icon(
                       Icons.location_on_outlined,
                       color: AppTheme.gold,
                       size: 20,
@@ -216,7 +226,7 @@ class _MapCardState extends State<_MapCard> {
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          LocaleKeys.location_address.tr(),
+                          (AdminDataService.getSiteSettings() ?? SiteSettings()).locationAddress,
                           style: GoogleFonts.montserrat(
                             fontSize: 12,
                             color: AppTheme.textMuted,
@@ -257,7 +267,7 @@ class _MapCardState extends State<_MapCard> {
                           Container(
                             width: 32,
                             height: 32,
-                            decoration: const BoxDecoration(
+                            decoration: BoxDecoration(
                               color: AppTheme.gold,
                               shape: BoxShape.circle,
                             ),
@@ -425,8 +435,7 @@ class _ContactFormState extends State<_ContactForm> {
   String? _selectedPackage;
   bool _sending = false;
 
-  // ── رقم الواتساب بتاعك ──────────────────────────────────────
-  static const _whatsappNumber = '201155699971'; // 20 = كود مصر
+  String get _whatsappNumber => (AdminDataService.getSiteSettings() ?? SiteSettings()).whatsappNumber;
 
   @override
   void dispose() {
@@ -482,7 +491,7 @@ ${(context.locale.languageCode == 'ar' ? '*رسالة:* ' : '*Message:* ')} ${_m
             margin: const EdgeInsets.all(20),
             content: Row(
               children: [
-                const Icon(Icons.check_circle_outline,
+                Icon(Icons.check_circle_outline,
                     color: AppTheme.gold, size: 20),
                 const SizedBox(width: 12),
                 Text(
@@ -683,7 +692,7 @@ ${(context.locale.languageCode == 'ar' ? '*رسالة:* ' : '*Message:* ')} ${_m
               ),
               decoration: InputDecoration(
                 hintText: LocaleKeys.form_date_hint.tr(),
-                suffixIcon: const Icon(
+                suffixIcon: Icon(
                   Icons.calendar_today_outlined,
                   color: AppTheme.gold,
                   size: 18,

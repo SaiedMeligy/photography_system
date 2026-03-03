@@ -9,6 +9,8 @@ import '../../../../core/constants/image_assets.dart';
 import '../../../../core/widgets/section_label.dart';
 import '../../../../core/widgets/gold_button.dart';
 import '../../cubit/home_cubit.dart';
+import 'package:photgraphy_system/admin/core/services/admin_data_service.dart';
+import 'package:photgraphy_system/admin/core/models/site_settings.dart';
 import '../widgets/stats_bar.dart';
 import '../widgets/about_section.dart';
 import '../widgets/portfolio_preview.dart';
@@ -105,16 +107,19 @@ class _HeroSectionState extends State<_HeroSection> {
                 child: PageView.builder(
                   controller: _pageController,
                   onPageChanged: context.read<HomeCubit>().setSlide,
-                  itemCount: heroImages.length,
+                   itemCount: (AdminDataService.getSiteSettings() ?? SiteSettings()).heroImage.isNotEmpty ? 1 : heroImages.length,
                   itemBuilder: (_, i) {
                     final isSmall = isMobile;
-                    return Image.asset(
-                      heroImages[i],
+                    final settings = AdminDataService.getSiteSettings() ?? SiteSettings();
+                    final imageProvider = settings.heroImage.isNotEmpty
+                        ? NetworkImage(settings.heroImage)
+                        : AssetImage(heroImages[i]) as ImageProvider;
+
+                    return Image(
+                      image: imageProvider,
                       fit: BoxFit.cover,
                       width: double.infinity,
                       height: double.infinity,
-                      // Lower resolution on mobile saves ~60% memory
-                      cacheWidth: isSmall ? 800 : 1920,
                     );
                   },
                 ),
@@ -270,7 +275,9 @@ class _HeroSectionState extends State<_HeroSection> {
               PositionedDirectional(
                 bottom: 40,
                 end: 60,
-                child: Row(
+                child: (AdminDataService.getSiteSettings() ?? SiteSettings()).heroImage.isNotEmpty 
+                    ? const SizedBox() 
+                    : Row(
                   children: List.generate(heroImages.length, (i) {
                     return AnimatedContainer(
                       duration: const Duration(milliseconds: 300),

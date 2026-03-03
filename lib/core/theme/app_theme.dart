@@ -1,15 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import 'package:photgraphy_system/admin/core/services/admin_data_service.dart';
+import 'package:photgraphy_system/admin/core/models/site_settings.dart';
+
 // ─── Theme Notifier (global toggle) ───────────────────────────
 final themeNotifier = ValueNotifier<ThemeMode>(ThemeMode.dark);
 
 class AppTheme {
-  // ─── Shared Gold Palette ──────────────────────────────────────
-  static const Color gold      = Color(0xFFD4AF37);
-  static const Color goldLight = Color(0xFFE8CC6A);
-  static const Color goldDim   = Color(0x26D4AF37);
-  static const Color rose      = Color(0xFFC8A07A);
+  // ─── Shared Dynamic Primary Palette ─────────────────────────────
+  static Color get gold {
+    try {
+      final hex = (AdminDataService.getSiteSettings() ?? const SiteSettings()).primaryColorHex;
+      if (hex.isNotEmpty) {
+        final val = int.parse(hex.replaceAll('#', ''), radix: 16);
+        return Color(val).withValues(alpha: 1.0);
+      }
+    } catch (_) {}
+    return const Color(0xFFD4AF37); // Fallback base gold
+  }
+
+  static Color get goldLight => gold.withValues(alpha: 0.8);
+  static Color get goldDim => gold.withValues(alpha: 0.15);
+  static Color get rose => const Color(0xFFC8A07A);
 
   // ─── Dark Palette ─────────────────────────────────────────────
   static const Color darkBg          = Color(0xFF0A0A0A);
@@ -133,7 +146,7 @@ class AppTheme {
           borderRadius: BorderRadius.zero,
           borderSide: BorderSide(color: border),
         ),
-        focusedBorder: const OutlineInputBorder(
+        focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.zero,
           borderSide: BorderSide(color: gold, width: 1.5),
         ),

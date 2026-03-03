@@ -4,6 +4,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:easy_localization/easy_localization.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/translations/locale_keys.g.dart';
+import 'package:photgraphy_system/admin/core/services/admin_data_service.dart';
+import 'package:photgraphy_system/admin/core/models/site_settings.dart';
 
 class AppShell extends StatefulWidget {
   final Widget child;
@@ -52,6 +54,7 @@ class _AppShellState extends State<AppShell> {
     final textMutedCol = isDark ? AppTheme.darkTextMuted : AppTheme.lightTextMuted;
     final borderCol = isDark ? AppTheme.darkBorder : AppTheme.lightBorder;
     final isAr = context.locale.languageCode == 'ar';
+    final settings = AdminDataService.getSiteSettings() ?? SiteSettings();
 
     return Scaffold(
       backgroundColor: isDark ? AppTheme.darkBg : AppTheme.lightBg,
@@ -107,7 +110,7 @@ class _AppShellState extends State<AppShell> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(
-                          'iBrahiim',
+                          settings.logoText,
                           style: GoogleFonts.dancingScript(
                             fontSize: 32,
                             color: AppTheme.gold,
@@ -115,7 +118,7 @@ class _AppShellState extends State<AppShell> {
                           ),
                         ),
                         Text(
-                          'PHOTOGRAPHY',
+                          settings.photographerTagline.toUpperCase(),
                           style: GoogleFonts.montserrat(
                             fontSize: 9,
                             letterSpacing: 0.35,

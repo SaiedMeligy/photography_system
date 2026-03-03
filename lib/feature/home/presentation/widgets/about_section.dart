@@ -2,10 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:easy_localization/easy_localization.dart';
+import '../../../../admin/core/models/site_settings.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/widgets/section_label.dart';
 import '../../../../core/constants/image_assets.dart';
 import '../../../../core/translations/locale_keys.g.dart';
+import 'package:photgraphy_system/admin/core/services/admin_data_service.dart';
+import 'package:photgraphy_system/admin/core/models/site_settings.dart';
 
 class AboutSection extends StatelessWidget {
   const AboutSection({super.key});
@@ -57,6 +60,8 @@ class _ImagesStack extends StatelessWidget {
   Widget build(BuildContext context) {
     context.locale;
     final isMobile = MediaQuery.of(context).size.width < 900;
+    final settings = AdminDataService.getSiteSettings() ??  SiteSettings();
+    final hasCustomImage = settings.aboutImage.isNotEmpty;
     
     return SizedBox(
       height: 550,
@@ -74,11 +79,16 @@ class _ImagesStack extends StatelessWidget {
                       ? null // Constraints from Positioned
                       : MediaQuery.of(context).size.width * 0.3,
                   height: 420,
-                  child: Image.asset(
-                    portfolioImages[10],
-                    fit: BoxFit.cover,
-                    cacheWidth: 800,
-                  ),
+                  child: hasCustomImage 
+                      ? Image.network(
+                          settings.aboutImage,
+                          fit: BoxFit.cover,
+                        )
+                      : Image.asset(
+                          portfolioImages[10],
+                          fit: BoxFit.cover,
+                          cacheWidth: 800,
+                        ),
                 ),
               ),
             )
@@ -87,37 +97,38 @@ class _ImagesStack extends StatelessWidget {
                 .slideX(begin: 0.1, end: 0),
           ),
 
-          // Second image
-          PositionedDirectional(
-            start: 0,
-            bottom: 0,
-            child: RepaintBoundary(
-              child: Container(
-                decoration: BoxDecoration(
-                  border: Border.all(color: AppTheme.bg, width: 4),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.1),
-                      blurRadius: 20,
-                      offset: const Offset(0, 10),
+          // Second image (Hidden if custom image is used)
+          if (!hasCustomImage)
+            PositionedDirectional(
+              start: 0,
+              bottom: 0,
+              child: RepaintBoundary(
+                child: Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(color: AppTheme.bg, width: 4),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.1),
+                        blurRadius: 20,
+                        offset: const Offset(0, 10),
+                      ),
+                    ],
+                  ),
+                  child: SizedBox(
+                    width: isMobile ? 180 : 240,
+                    height: 280,
+                    child: Image.asset(
+                      portfolioImages[25],
+                      fit: BoxFit.cover,
+                      cacheWidth: 500,
                     ),
-                  ],
-                ),
-                child: SizedBox(
-                  width: isMobile ? 180 : 240,
-                  height: 280,
-                  child: Image.asset(
-                    portfolioImages[25],
-                    fit: BoxFit.cover,
-                    cacheWidth: 500,
                   ),
                 ),
-              ),
-            )
-                .animate()
-                .fadeIn(delay: 300.ms, duration: 900.ms)
-                .slideX(begin: -0.1, end: 0),
-          ),
+              )
+                  .animate()
+                  .fadeIn(delay: 300.ms, duration: 900.ms)
+                  .slideX(begin: -0.1, end: 0),
+            ),
 
           // Gold badge
           PositionedDirectional(
@@ -232,7 +243,7 @@ class _AboutContent extends StatelessWidget {
           padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
             border: BorderDirectional(
-              start: const BorderSide(color: AppTheme.gold, width: 3),
+              start: BorderSide(color: AppTheme.gold, width: 3),
             ),
             color: AppTheme.goldDim,
           ),

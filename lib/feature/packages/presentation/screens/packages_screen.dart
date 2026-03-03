@@ -405,7 +405,7 @@ class _PackageCardState extends State<_PackageCard> {
                           color: AppTheme.goldDim,
                           border: Border.all(color: AppTheme.gold),
                         ),
-                        child: const Icon(
+                        child: Icon(
                           Icons.check,
                           size: 10,
                           color: AppTheme.gold,
@@ -659,10 +659,10 @@ class _NotesSection extends StatelessWidget {
         color: AppTheme.goldDim,
         // RTL: accent bar on right (start of reading), LTR: left
         border: isRtl
-            ? const Border(
+            ? Border(
                 right: BorderSide(color: AppTheme.gold, width: 3),
               )
-            : const Border(
+            : Border(
                 left: BorderSide(color: AppTheme.gold, width: 3),
               ),
       ),

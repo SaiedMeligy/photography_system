@@ -356,7 +356,7 @@ class _TestimonialCardState extends State<_TestimonialCard> {
             Row(
               children: List.generate(
                 5,
-                (i) => const Padding(
+                (i) => Padding(
                   padding: EdgeInsets.only(right: 3),
                   child: Icon(Icons.star, color: AppTheme.gold, size: 14),
                 ),

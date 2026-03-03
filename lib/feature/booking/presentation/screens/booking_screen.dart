@@ -240,7 +240,7 @@ class _CalendarSection extends StatelessWidget {
                   fontSize: 13,
                   color: AppTheme.gold,
                   fontWeight: FontWeight.w600),
-              selectedDecoration: const BoxDecoration(
+              selectedDecoration: BoxDecoration(
                 color: AppTheme.gold,
                 shape: BoxShape.circle,
               ),
@@ -306,7 +306,7 @@ class _CalendarSection extends StatelessWidget {
               child: Row(
                 textDirection: isRtl ? ui.TextDirection.rtl : ui.TextDirection.ltr,
                 children: [
-                  const Icon(Icons.check_circle_outline,
+                  Icon(Icons.check_circle_outline,
                       color: AppTheme.gold, size: 20),
                   const SizedBox(width: 12),
                   Text(
@@ -411,7 +411,7 @@ class _BookingForm extends StatelessWidget {
           child: Row(
             textDirection: isRtl ? ui.TextDirection.rtl : ui.TextDirection.ltr,
             children: [
-              const Icon(Icons.calendar_today_outlined,
+              Icon(Icons.calendar_today_outlined,
                   color: AppTheme.gold, size: 16),
               const SizedBox(width: 12),
               Text(

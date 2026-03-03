@@ -6,6 +6,8 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/translations/locale_keys.g.dart';
+import 'package:photgraphy_system/admin/core/services/admin_data_service.dart';
+import 'package:photgraphy_system/admin/core/models/site_settings.dart';
 
 class FooterSection extends StatelessWidget {
   const FooterSection({super.key});
@@ -13,6 +15,7 @@ class FooterSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isMobile = MediaQuery.of(context).size.width < 700;
+    final settings = AdminDataService.getSiteSettings() ?? SiteSettings();
 
     return Container(
       color: AppTheme.bg,
@@ -27,8 +30,8 @@ class FooterSection extends StatelessWidget {
               vertical: 60,
             ),
             child: isMobile
-                ? _buildMobile(context)
-                : _buildDesktop(context),
+                ? _buildMobile(context, settings)
+                : _buildDesktop(context, settings),
           ),
 
           // Bottom bar
@@ -44,7 +47,7 @@ class FooterSection extends StatelessWidget {
               children: [
                 Expanded(
                   child: Text(
-                    '© ${DateTime.now().year} iBrahiim Photography. ${LocaleKeys.footer_rights.tr()}',
+                    '© ${DateTime.now().year} ${settings.photographerName}. ${LocaleKeys.footer_rights.tr()}',
                     textAlign: isMobile ? TextAlign.center : (context.locale.languageCode == 'ar' ? TextAlign.right : TextAlign.left),
                     style: GoogleFonts.montserrat(
                       fontSize: 11,
@@ -68,7 +71,7 @@ class FooterSection extends StatelessWidget {
     );
   }
 
-  Widget _buildDesktop(BuildContext context) {
+  Widget _buildDesktop(BuildContext context, final settings) {
     final isRtl = context.locale.languageCode == 'ar';
     return Row(
       textDirection: isRtl ? ui.TextDirection.rtl : ui.TextDirection.ltr,
@@ -81,7 +84,7 @@ class FooterSection extends StatelessWidget {
             crossAxisAlignment: isRtl ? CrossAxisAlignment.end : CrossAxisAlignment.start,
             children: [
               Text(
-                'iBrahiim',
+                settings.logoText,
                 style: GoogleFonts.dancingScript(
                   fontSize: 40,
                   color: AppTheme.gold,
@@ -90,7 +93,7 @@ class FooterSection extends StatelessWidget {
               ),
               const SizedBox(height: 4),
               Text(
-                'PHOTOGRAPHY',
+                settings.photographerTagline.toUpperCase(),
                 style: GoogleFonts.montserrat(
                   fontSize: 9,
                   letterSpacing: 0.35,
@@ -99,7 +102,7 @@ class FooterSection extends StatelessWidget {
               ),
               const SizedBox(height: 20),
               Text(
-                LocaleKeys.footer_tagline.tr(),
+                settings.footerTagline,
                 textAlign: isRtl ? TextAlign.right : TextAlign.left,
                 style: GoogleFonts.montserrat(
                   fontSize: 12,
@@ -133,9 +136,14 @@ class FooterSection extends StatelessWidget {
             children: [
               _FooterHeading(LocaleKeys.footer_contact.tr()),
               const SizedBox(height: 16),
-              _ContactLink('📱 01155699971', 'tel:01155699971'),
-              _ContactLink('📸 @HEEMA.GAMAL_PH', 'https://www.instagram.com/heema.gamal_ph'),
-              _ContactLink('📍 ${LocaleKeys.location_title.tr()}', 'https://www.google.com/maps/search/?api=1&query=25+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%A7%D9%84%D8%B4%D8%B1%D9%83%D8%A7%D8%AA+%D8%A7%D9%84%D8%B2%D8%A7%D9%88%D9%8A%D8%A9+%D8%A7%D9%84%D8%AD%D9%85%D8%B1%D8%A7%D8%A1+%D8%A7%D9%84%D9%82%D8%A7%D9%87%D8%B1%D8%A9'),
+              if (settings.whatsappNumber.isNotEmpty)
+                _ContactLink('📱 ${settings.whatsappNumber}', 'https://wa.me/${settings.whatsappNumber}'),
+              if (settings.instagramHandle.isNotEmpty)
+                _ContactLink('📸 ${settings.instagramHandle}', settings.instagramUrl.isNotEmpty ? settings.instagramUrl : 'https://www.instagram.com/${settings.instagramHandle.replaceAll('@', '')}'),
+              if (settings.facebookUrl.isNotEmpty)
+                _ContactLink('📘 Facebook', settings.facebookUrl),
+              if (settings.locationAddress.isNotEmpty)
+                _ContactLink('📍 ${settings.locationAddress}', settings.locationMapsUrl.isNotEmpty ? settings.locationMapsUrl : 'https://www.google.com/maps/search/?api=1&query=${Uri.encodeComponent(settings.locationAddress)}'),
               Text(
                 '💳 ${LocaleKeys.contact_payment_value.tr()}',
                 textAlign: isRtl ? TextAlign.right : TextAlign.left,
@@ -148,12 +156,12 @@ class FooterSection extends StatelessWidget {
     );
   }
 
-  Widget _buildMobile(BuildContext context) {
+  Widget _buildMobile(BuildContext context, final settings) {
     final isRtl = context.locale.languageCode == 'ar';
     return Column(
       children: [
         Text(
-          'iBrahiim',
+          settings.logoText,
           style: GoogleFonts.dancingScript(
             fontSize: 40,
             color: AppTheme.gold,
@@ -162,7 +170,7 @@ class FooterSection extends StatelessWidget {
         ),
         const SizedBox(height: 6),
         Text(
-          'PHOTOGRAPHY',
+          settings.photographerTagline.toUpperCase(),
           style: GoogleFonts.montserrat(
             fontSize: 9,
             letterSpacing: 0.35,
@@ -183,12 +191,18 @@ class FooterSection extends StatelessWidget {
           ],
         ),
         const SizedBox(height: 24),
-        _ContactLink('📱 01155699971   •   📸 @HEEMA.GAMAL_PH', 'https://www.instagram.com/heema.gamal_ph'),
+        if (settings.whatsappNumber.isNotEmpty)
+          _ContactLink('📱 ${settings.whatsappNumber}', 'https://wa.me/${settings.whatsappNumber}'),
+        if (settings.instagramHandle.isNotEmpty)
+          _ContactLink('📸 ${settings.instagramHandle}', settings.instagramUrl.isNotEmpty ? settings.instagramUrl : 'https://www.instagram.com/${settings.instagramHandle.replaceAll('@', '')}'),
+        if (settings.facebookUrl.isNotEmpty)
+          _ContactLink('📘 Facebook', settings.facebookUrl),
         const SizedBox(height: 8),
-        _ContactLink('📍 ${LocaleKeys.location_address.tr()}', 'https://www.google.com/maps/search/?api=1&query=25+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%A7%D9%84%D8%B4%D8%B1%D9%83%D8%A7%D8%AA+%D8%A7%D9%84%D8%B2%D8%A7%D9%88%D9%8A%D8%A9+%D8%A7%D9%84%D8%AD%D9%85%D8%B1%D8%A7%D8%A1+%D8%A7%D9%84%D9%82%D8%A7%D9%87%D8%B1%D8%A9'),
+        if (settings.locationAddress.isNotEmpty)
+          _ContactLink('📍 ${settings.locationAddress}', settings.locationMapsUrl.isNotEmpty ? settings.locationMapsUrl : 'https://www.google.com/maps/search/?api=1&query=${Uri.encodeComponent(settings.locationAddress)}'),
         const SizedBox(height: 24),
         Text(
-          '© ${DateTime.now().year} iBrahiim Photography. ${LocaleKeys.footer_rights.tr()}',
+          '© ${DateTime.now().year} ${settings.photographerName}. ${LocaleKeys.footer_rights.tr()}',
           textAlign: TextAlign.center,
           style: GoogleFonts.montserrat(
             fontSize: 10,

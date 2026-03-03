@@ -471,7 +471,7 @@ class _TestimonialCardState extends State<_TestimonialCard> {
                     right: isRtl ? 0 : 3,
                     left: isRtl ? 3 : 0,
                   ),
-                  child: const Icon(Icons.star, color: AppTheme.gold, size: 14),
+                  child: Icon(Icons.star, color: AppTheme.gold, size: 14),
                 ),
               ),
             ),
